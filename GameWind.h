@@ -207,6 +207,7 @@ public:
 
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                break;
                 currentWind.close();
                 //nextState = 1;
             }

@@ -170,6 +170,9 @@ public:
 
     int run() {
 
+        if (!mainWind.isOpen())
+            mainWind.create(sf::VideoMode(1900, 1050), "MAIN MENU");
+
         while (mainWind.isOpen()) {
 
             Event event;
