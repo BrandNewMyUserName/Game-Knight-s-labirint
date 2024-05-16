@@ -140,8 +140,10 @@ public:
     Button closeButton;
     Button gameButton;
 
+    int nextState = -1;
+
 public:
-    MainWindow() : mainWind(sf::VideoMode(1900, 1050), "MAIN MENU"), closeButton(400, 100, 200, 50, "Вийти", font), gameButton(500, 200, 200, 50, "Почати гру", font) {
+    MainWindow() :/* mainWind(sf::VideoMode(1900, 1050), "MAIN MENU"),*/ closeButton(400, 100, 200, 50, "Вийти", font), gameButton(500, 200, 200, 50, "Почати гру", font) {
        
         //try {
         //    if (!backgroundTexture.loadFromFile("pictures/MainWind-background.png")) {
@@ -164,14 +166,14 @@ public:
         gameButton = Button(500, 200, 200, 50, "Почати гру", font);
     }
 
+
     void closeWindow() {
         mainWind.close();
     }
 
     int run() {
+        mainWind.create(sf::VideoMode(1900, 1050), "MAIN MENU");
 
-        if (!mainWind.isOpen())
-            mainWind.create(sf::VideoMode(1900, 1050), "MAIN MENU");
 
         while (mainWind.isOpen()) {
 
@@ -180,16 +182,27 @@ public:
             while (mainWind.pollEvent(event)) {
 
                 if (event.type == sf::Event::Closed) {
+                    closeWindow();
+                    return EXIT_SUCCESS;
+
+                    nextState = 1;
+                    break;
                     mainWind.close();
                 }
 
                 if (event.type == sf::Event::MouseButtonPressed) {
                     if (closeButton.isClicked(mainWind)) {
                         closeWindow();
-                        return EXIT_SUCCESS; //TODO
+                        return EXIT_SUCCESS;
+                        //();
+                        nextState = 0;
+                        break;//TODO
                     }
                     if (gameButton.isClicked(mainWind)) {
                         closeWindow();
+                        return EXIT_FAILURE;
+                        nextState = EXIT_FAILURE;
+                        break;
                         return 1; //TODO
                     }
                 }
@@ -206,7 +219,8 @@ public:
             mainWind.display();
         }
 
-        return EXIT_SUCCESS; //TODO
+        closeWindow();
+        return nextState; //TODO
     }
 };
 

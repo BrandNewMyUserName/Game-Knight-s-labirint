@@ -8,7 +8,7 @@ int main() {
     MainWindow mainWindow;
 
     
-    while (!mainWindow.run()) {
+    while (mainWindow.run()) {
         GameWind GameWindow;
         GameWindow.run();
 
