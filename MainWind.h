@@ -1,9 +1,10 @@
+#pragma once
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
 
-class MainWindow{
-public: 
+class MainWindow {
+public:
     static int CreateMainWindow() {
         // Создание окна для главной страницы
         sf::RenderWindow mainWindow(sf::VideoMode(800, 600), "SFML Page Movement" /*, Style::Fullscreen*/);
@@ -16,20 +17,20 @@ public:
         sf::Sprite backgroundSprite(backgroundTexture);
 
         // Создание кнопок
-        sf::RectangleShape closeButton = createButton(400, 100, 200, 50, sf::Color::Red);
-        sf::RectangleShape gameButton = createButton(500, 200, 200, 50, sf::Color::Green);
+        sf::RectangleShape closeButton = createButton(400, 100, 200, 50, sf::Color::White, "Вийти");
+        sf::RectangleShape gameButton = createButton(500, 200, 200, 50, sf::Color::White, "Почати гру");
 
         // Создание текста для кнопок
         sf::Font font;
         font.loadFromFile("arial.ttf"); // Путь к шрифту
 
-        sf::Text closeText("Close", font, 30);
+        sf::Text closeText("Вийти", font, 30);
         closeText.setPosition(165, 110);
-        closeText.setFillColor(sf::Color::White);
+        closeText.setFillColor(sf::Color::Black);
 
-        sf::Text gameText("Game Window", font, 30);
+        sf::Text gameText("Почати гру", font, 30);
         gameText.setPosition(105, 210);
-        gameText.setFillColor(sf::Color::White);
+        gameText.setFillColor(sf::Color::Black);
 
         while (mainWindow.isOpen()) {
             sf::Event event;
@@ -70,17 +71,22 @@ public:
         return EXIT_SUCCESS;
     }
 
-    static RectangleShape createButton(float x, float y, float width, float height, sf::Color color) {
+    static RectangleShape createButton(float x, float y, float width, float height, sf::Color color, const std::string& buttonText, sf::Texture* buttonTexture = nullptr) {
         sf::RectangleShape button(sf::Vector2f(width, height));
         button.setPosition(x, y);
         button.setFillColor(color);
+        if (buttonTexture) {
+            button.setTexture(buttonTexture);
+        }
+
+        // Создаем текст для кнопки
+        sf::Font font;
+        font.loadFromFile("arial.ttf"); // Путь к шрифту
+
+        sf::Text text(buttonText, font, 20);
+        text.setFillColor(sf::Color::White);
+        text.setPosition(x + (width - text.getLocalBounds().width) / 2, y + (height - text.getLocalBounds().height) / 2);
+
         return button;
     }
 };
-
-
-
-
-
-
-

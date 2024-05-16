@@ -150,6 +150,7 @@
     <ClInclude Include="A_star.h" />
     <ClInclude Include="GameWind.h" />
     <ClInclude Include="MainWind.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="ResultWind.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
