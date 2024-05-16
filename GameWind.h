@@ -213,8 +213,7 @@ public:
             }
 
             currentWind.clear();
-            currentWind.draw(character.characterSprite);
-            currentWind.display();
+
 
             //void draw();
 
@@ -232,11 +231,9 @@ public:
 
                     currentWind.draw(this->s_map);//рисуем квадратики на экран
                 }
-
-
-                currentWind.draw(character.characterSprite);
-                currentWind.display();
             }
+            currentWind.draw(character.characterSprite);
+            currentWind.display();
 
 
         }
