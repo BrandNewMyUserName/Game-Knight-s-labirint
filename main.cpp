@@ -6,7 +6,7 @@
 int main() {
 
     MainWindow mainWindow;
-    
+
     
     while (!mainWindow.run()) {
         GameWind GameWindow;

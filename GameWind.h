@@ -1,7 +1,7 @@
 #pragma once
 #include<iostream>
 #include <SFML/Graphics.hpp>
-#include "Map.h"
+//#include "Map.h"
 
 //const int EXIT_GAME = 1;
 //const int PLAY_GAME = 0;
@@ -60,7 +60,7 @@ public:
     String WindowName;
     Character character;
 
-    Map MAP;
+    //Map MAP;
 
     Image mapImage;
     Texture mapTexture;
@@ -69,11 +69,11 @@ public:
 
     RenderWindow currentWind;
 
-    GameWind(): currentWind(sf::VideoMode(1900, 1050), "Knight's Labyrinth: Treasure Hunt"), character(), MAP() {
-        //this->width_screen = 1920;
-        //this->height_screen = 1080;
-        //this->WindowName = "";
-        //imageLink = "map.png";
+    GameWind(): currentWind(sf::VideoMode(1900, 1050), "Knight's Labyrinth: Treasure Hunt"), character() /*, MAP()*/ {
+        this->width_screen = 1920;
+        this->height_screen = 1080;
+        this->WindowName = "Knight's Labyrinth: Treasure Hunt";
+        imageLink = "map.png";
 
 
   /*      try {
@@ -93,6 +93,7 @@ public:
 
 
     int run() {
+        //currentWind(sf::VideoMode(1900, 1050), "Knight's Labyrinth: Treasure Hunt");
         //currentWind.create(VideoMode(this->width_screen, this->height_screen), this->WindowName /*,sf::Style::Fullscreen*/);
         int nextState;
         Clock clock;
@@ -216,27 +217,27 @@ public:
 
             //void draw();
 
-            for (int i = 0; i < HEIGHT_MAP; i++) {
-                for (int j = 0; j < WIDTH_MAP; j++)
-                {
-                    if (MAP.Grid[i][j] == '0')
-                        this->s_map.setTextureRect(IntRect(0, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION)); //если встретили символ пробел, то рисуем 1й квадратик
-                    if (MAP.Grid[i][j] == '1')
-                        s_map.setTextureRect(IntRect(PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));//если встретили символ s, то рисуем 2й квадратик
-                    //if ((Map[i][j] == )) s_map.setTextureRect(IntRect(64, 0, 32, 32));//если встретили символ 0, то рисуем 3й квадратик
+            //for (int i = 0; i < HEIGHT_MAP; i++) {
+            //    for (int j = 0; j < WIDTH_MAP; j++)
+            //    {
+            //        if (MAP.Grid[i][j] == '0')
+            //            this->s_map.setTextureRect(IntRect(0, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION)); //если встретили символ пробел, то рисуем 1й квадратик
+            //        if (MAP.Grid[i][j] == '1')
+            //            s_map.setTextureRect(IntRect(PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));//если встретили символ s, то рисуем 2й квадратик
+            //        //if ((Map[i][j] == )) s_map.setTextureRect(IntRect(64, 0, 32, 32));//если встретили символ 0, то рисуем 3й квадратик
 
 
-                    s_map.setPosition(j * PICTURE_RESOLUTION, i * PICTURE_RESOLUTION);//по сути раскидывает квадратики, превращая в карту. то есть задает каждому из них позицию. если убрать, то вся карта нарисуется в одном квадрате 32*32 и мы увидим один квадрат
+            //        s_map.setPosition(j * PICTURE_RESOLUTION, i * PICTURE_RESOLUTION);//по сути раскидывает квадратики, превращая в карту. то есть задает каждому из них позицию. если убрать, то вся карта нарисуется в одном квадрате 32*32 и мы увидим один квадрат
 
-                    currentWind.draw(s_map);//рисуем квадратики на экран
-                }
+            //        currentWind.draw(s_map);//рисуем квадратики на экран
+            //    }
 
-            }
+            //}
 
 
         }
         //return nextState;
-
+        currentWind.close();
         return EXIT_SUCCESS;
 
 
