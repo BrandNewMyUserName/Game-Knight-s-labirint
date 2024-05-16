@@ -3,10 +3,9 @@
 #include <iostream>
 #include <vector>
 
-
+const int PICTURE_RESOLUTION = 32;
 const int WIDTH_MAP = 20;
 const int HEIGHT_MAP = 13;
-#define PICTURE_RESOLUTION 32;
 
 using namespace std;
 using namespace sf;
@@ -15,7 +14,7 @@ using namespace sf;
 class Map {
 public:
     
-    static vector<String> Grid;
+    vector<String> Grid;
 
     Map() {
         vector<String> Grid = {

@@ -1,37 +1,4 @@
 
-//#include <SFML/Graphics.hpp>
-//#include "MainWind.h" // Подключаем заголовочный файл
-//
-//int main() {
-//    // Создаем объект класса MainWindow
-//    MainWindow mainWindow;
-//
-//    // Вызываем метод, который открывает окно
-//    mainWindow.open();
-//
-//    return EXIT_SUCCESS;
-//}
-
-
-//#include <SFML/Graphics.hpp>
-//#include "GameWind.h" // Include GameWind.h contents
-//#include "MainWind.h"
-//#include<iostream>
-//
-//int main() {
-//
-//    while (CreateMainWind()) {
-//
-//        if (CreateMainWind()) {
-//            Start_Game();
-//
-//        }
-//
-//    }
-//
-//    return 0;
-//}
-
 #include <SFML/Graphics.hpp>
 #include "MainWind.h"
 #include "GameWind.h" 
@@ -39,13 +6,16 @@
 int main() {
 
     MainWindow mainWindow;
-    GameWindow gameWindow;
+    
+    
+    while (!mainWindow.run()) {
+        GameWind GameWindow;
+        GameWindow.run();
 
-    while (mainWindow.run() == 1) {
-        gameWindow.run();
     }
 
-    // End the program if result is not 1
+
+
     return 0;
 }
 
