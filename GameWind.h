@@ -233,6 +233,9 @@ public:
                     currentWind.draw(this->s_map);//рисуем квадратики на экран
                 }
 
+
+                currentWind.draw(character.characterSprite);
+                currentWind.display();
             }
 
 
