@@ -1,3 +1,4 @@
+
 //#include <SFML/Graphics.hpp>
 //#include "MainWind.h" // Подключаем заголовочный файл
 //
@@ -31,18 +32,19 @@
 //    return 0;
 //}
 
-
+#include <SFML/Graphics.hpp>
 #include "MainWind.h"
 #include "GameWind.h" 
 
 int main() {
 
-    MainWindow CurrentSeans;
+    MainWindow mainWindow;
+    GameWindow gameWindow;
 
-    while (CurrentSeans.CreateMainWindow() == 1) {
-        // Open Game Window
-        OpenGameWindow();
+    while (mainWindow.run() == 1) {
+        gameWindow.run();
     }
+
     // End the program if result is not 1
     return 0;
 }
