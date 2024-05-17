@@ -21,8 +21,8 @@ public: float x, y, speedMove, speedRun, h, w, dx, dy;
       Map MAP;
 
       Character(/*Map MAP*/): x(250), y(250), h(74), w(75), speedMove(0.05), speedRun(0.1), dir(0), dx(1), dy(0), Picture_name("Knight_spikes.png"){
-          this->x = 500;
-          this->y = 500;
+          //this->x = 500;
+          //this->y = 500;
           h = 74;
           w = 75;
           Picture_name = "Knight_spikes.png";
@@ -57,61 +57,59 @@ public: float x, y, speedMove, speedRun, h, w, dx, dy;
           return y;
       }
 
-      void setDirection(float time) {
+      void setDirection() {
+
+
           switch (dir) {
           case 0:
-              dx = speedRun*time;
+              dx = speedRun; // *time;
               dy = 0;
               break;
           case 1:
               dx = 0;
-              dy = -speedRun * time;
+              dy = -speedRun;// *time;
               break;
           case 2:
-              dx = -speedRun * time;
+              dx = -speedRun;// *time;
               dy = 0;
               break;
           case 3:
               dx = 0;
-              dy = speedRun * time;
+              dy = speedRun;// *time;
               break;
           }
       }
 
+      void update() {
+          setDirection();
+
+          x += dx;
+          y += dy;
+
+          characterSprite.setPosition(x, y);
+          interactionWithMap(dir);
+
+      }
 
       void interactionWithMap(float time)
       {
-          setDirection(time);
+
+
           for (int i = y / PICTURE_RESOLUTION; i < (y + h) / PICTURE_RESOLUTION; i++)//проходимся по тайликам, контактирующим с игроком, то есть по всем квадратикам размера PICTURE_RESOLUTION*PICTURE_RESOLUTION, которые мы окрашивали в 9 уроке. про условия читайте ниже.
               for (int j = x / PICTURE_RESOLUTION; j < (x + w) / PICTURE_RESOLUTION; j++)//икс делим на PICTURE_RESOLUTION, тем самым получаем левый квадратик, с которым персонаж соприкасается. (он ведь больше размера PICTURE_RESOLUTION*PICTURE_RESOLUTION, поэтому может одновременно стоять на нескольких квадратах). А j<(x + w) / PICTURE_RESOLUTION - условие ограничения координат по иксу. то есть координата самого правого квадрата, который соприкасается с персонажем. таким образом идем в цикле слева направо по иксу, проходя по от левого квадрата (соприкасающегося с героем), до правого квадрата (соприкасающегося с героем)
               {
-                  if (MAP.Grid[i][j] == '0')//если наш квадратик соответствует символу 0 (стена), то проверяем "направление скорости" персонажа:
+                  if (MAP.Grid[i][j] == '0')
                   {
-                      //if (dy > 0)//если мы шли вниз,
-                      //{
-                      //    y = i * PICTURE_RESOLUTION - h;//то стопорим координату игрек персонажа. сначала получаем координату нашего квадратика на карте(стены) и затем вычитаем из высоты спрайта персонажа.
-                      //}
-                      //if (dy < 0)
-                      //{
-                      //    y = i * PICTURE_RESOLUTION + PICTURE_RESOLUTION;//аналогично с ходьбой вверх. dy<0, значит мы идем вверх (вспоминаем координаты паинта)
-                      //}
-                      //if (dx > 0)
-                      //{
-                      //    x = j * PICTURE_RESOLUTION - w;//если идем вправо, то координата Х равна стена (символ 0) минус ширина персонажа
-                      //}
-                      //if (dx < 0)
-                      //{
-                      //    x = j * PICTURE_RESOLUTION + PICTURE_RESOLUTION;//аналогично идем влево
-                      //}
-
-                      //characterSprite.setPosition(this->x, this->y);
+                      switch (dir) {
+                          case 0: x = j * PICTURE_RESOLUTION - w; break;
+                          case 1: y = i * PICTURE_RESOLUTION + PICTURE_RESOLUTION; break;
+                          case 2: x = j * PICTURE_RESOLUTION + PICTURE_RESOLUTION; break;
+                          case 3: y = i * PICTURE_RESOLUTION - h; break;
+                      }
                   }
-                  else {
-                      x += dx;
-                      y += dy;
-                      characterSprite.setPosition(dx, dy);
 
-                  }
+
+                  
  
                   
 
@@ -157,25 +155,42 @@ public: float x, y, speedMove, speedRun, h, w, dx, dy;
                   CurrentFrame -= 3;
               characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 400, 75, 74));
               dir = 2;
-              setDirection(time);
-              x += dx;
-              y += dy;
-              characterSprite.setPosition(x, y);
           }
-          interactionWithMap(dir);
+          if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+              CurrentFrame += speedMove * time;
+              if (CurrentFrame > 3)
+                  CurrentFrame -= 3;
+              characterSprite.setTextureRect(IntRect(600, coordinates[1][int(CurrentFrame)], 75, 74));
+              dir = 1;
+          }
+          if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+              CurrentFrame += speedMove * time;
+              if (CurrentFrame > 3)
+                  CurrentFrame -= 3;
+              characterSprite.setTextureRect(IntRect(coordinates[2][int(CurrentFrame)], 210, 75, 74));
+              dir = 3;
+          }
+          if ((sf::Keyboard::isKeyPressed(Keyboard::D))) {
+              CurrentFrame += speedMove * time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив speedMove можно изменить скорость анимации
+              if (CurrentFrame > 3)
+                  CurrentFrame -= 3;
+              characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 25, 75, 74));
+              dir = 0;
+          }
+            
+          update();
+
+
 
           //if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-
           //    CurrentFrame += speedMove * time;
           //    if (CurrentFrame > 3)
           //        CurrentFrame -= 3;
           //    characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 400, 75, 74));
           //    characterSprite.move(-speedRun * time, 0);
           //    dir = 2;
-
           //}
           //if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-
           //    CurrentFrame += speedMove * time;
           //    if (CurrentFrame > 3)
           //        CurrentFrame -= 3;
@@ -184,14 +199,12 @@ public: float x, y, speedMove, speedRun, h, w, dx, dy;
           //    dir = 1;
           //}
           //if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-
           //    CurrentFrame += speedMove * time;
           //    if (CurrentFrame > 3)
           //        CurrentFrame -= 3;
           //    characterSprite.setTextureRect(IntRect(coordinates[2][int(CurrentFrame)], 210, 75, 74));
           //    characterSprite.move(0, speedRun * time);
           //    dir = 3;
-
           //}
           //if ((sf::Keyboard::isKeyPressed(Keyboard::D))) {
           //    CurrentFrame += speedMove * time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив speedMove можно изменить скорость анимации
