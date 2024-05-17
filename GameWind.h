@@ -30,6 +30,7 @@ public: float x, y, speedMove, speedRun, h, w;
 
           this->characterImage.loadFromFile("pictures/" + this->Picture_name);
 
+//Try-Catch
   /*        this->characterImage;
           try {
               if (!this->characterImage.loadFromFile("pictures/" + this->Picture_name)) {
@@ -56,17 +57,6 @@ public: float x, y, speedMove, speedRun, h, w;
       float getY() {
           return y;
       }
-
-      //(Keyboard::isKeyPressed(Keyboard::D)
-
-      //void move(Key Key) {
-      //    switch (Keyboard::Key) {
-      //    case A:
-
-      //    }
-      //
-      //}
-
 
       void setDirection() {
           switch (this->dir) {
@@ -163,7 +153,7 @@ public: float x, y, speedMove, speedRun, h, w;
               CurrentFrame += speedMove * time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив speedMove можно изменить скорость анимации
               if (CurrentFrame > 3)
                   CurrentFrame -= 3;
-              characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 25, 180, 112));
+              characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 25, 75, 74));
               characterSprite.move(speedRun * time, 0);
               dir = 0;
           }
@@ -177,7 +167,7 @@ public:
     String WindowName;
     Character character;
 
-    Map MAP;
+    Map MAP = Map();
 
     Image mapImage;
     Texture mapTexture;
@@ -186,13 +176,13 @@ public:
 
     RenderWindow currentWind;
 
-    GameWind(): currentWind(sf::VideoMode(1900, 1050), "Knight's Labyrinth: Treasure Hunt"), MAP(), character(this->MAP) {
+    GameWind(): currentWind(sf::VideoMode(1900, 1050), "Knight's Labyrinth: Treasure Hunt"), character(this->MAP) {
         this->width_screen = 1920;
         this->height_screen = 1080;
         this->WindowName = "Knight's Labyrinth: Treasure Hunt";
         imageLink = "map.png";
 
-
+//Try-Catch
   /*      try {
             if (!mapImage.loadFromFile("pictures/" + imageLink)) {
                 throw "Unable to find an map image";
@@ -227,7 +217,6 @@ public:
 
                 if (event.type == sf::Event::Closed) {
                     currentWind.close();
-                    //nextState = 1;
                 }
             }
 
@@ -373,10 +362,10 @@ public:
             for (int i = 0; i < HEIGHT_MAP; i++) {
                 for (int j = 0; j < WIDTH_MAP; j++)
                 {
-                    if (MAP.Grid[i][j] == '0')
-                        this->s_map.setTextureRect(IntRect(0, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION)); //Стіни
                     if (MAP.Grid[i][j] == ' ')
-                        this->s_map.setTextureRect(IntRect(PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));// Шляхи
+                        this->s_map.setTextureRect(IntRect(0, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION)); // Шляхи 
+                    if (MAP.Grid[i][j] == '0')
+                        this->s_map.setTextureRect(IntRect(PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));//Стіни
                     //if ((Map[i][j] == )) s_map.setTextureRect(IntRect(64, 0, 32, 32));//если встретили символ 0, то рисуем 3й квадратик
 
 
