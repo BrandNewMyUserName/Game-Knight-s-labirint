@@ -19,7 +19,7 @@ using namespace sf;
 class Map {
 public:
 
-	const static vector<String> Grid = {
+	vector<String> Grid = {
 		"0000000000000000000000000000000000000000",
 		"0                                      0",
 		"0                                      0",
