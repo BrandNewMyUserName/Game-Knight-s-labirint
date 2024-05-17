@@ -20,7 +20,7 @@ public: float x, y, speedMove, speedRun, h, w;
       Sprite characterSprite;
       Map MAP;
 
-      Character(Map MAP): x(250), y(250), h(74), w(75), speedMove(0.05), speedRun(0.1), dir(0), Picture_name("Knight_spikes.png"){
+      Character(/*Map MAP*/): x(250), y(250), h(74), w(75), speedMove(0.05), speedRun(0.1), dir(0), Picture_name("Knight_spikes.png"){
           this->x = 500;
           this->y = 500;
           h = 74;
@@ -176,7 +176,7 @@ public:
 
     RenderWindow currentWind;
 
-    GameWind(): currentWind(sf::VideoMode(1900, 1050), "Knight's Labyrinth: Treasure Hunt"), character(this->MAP) {
+    GameWind(): currentWind(sf::VideoMode(1900, 1050), "Knight's Labyrinth: Treasure Hunt"), character(/*this->MAP*/) {
         this->width_screen = 1920;
         this->height_screen = 1080;
         this->WindowName = "Knight's Labyrinth: Treasure Hunt";
