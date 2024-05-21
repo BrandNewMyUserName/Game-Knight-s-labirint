@@ -1,5 +1,6 @@
 #pragma once
-#include<iostream>
+#include <iostream>
+#include <sstream>
 #include <SFML/Graphics.hpp>
 #include "Character.h"
 #include "Map.h"
@@ -55,6 +56,12 @@ public:
         view.reset(FloatRect(character.x, character.y, 800, 450));
         getplayercoordinateforview(character.x, character.y);
 
+        Font font;
+        font.loadFromFile("C:\\Users\\User\\Desktop\\University\\2 курс 2 семестр\\Курсова робота\\Картинки\\Шрифт\\static\\OpenSans_Condensed - Bold.ttf");
+        Text scoreValue(" ", font, 100);
+        scoreValue.setStyle(Text::Bold);
+        scoreValue.setFillColor(Color::Red);
+
         int nextState;
         float CurrentFrame = 0;
         Clock clock;
@@ -73,16 +80,26 @@ public:
                 }
             }
 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-                autoMode = 1;
-                character.navigation.search(character.x_pos, character.y_pos);
-            }
-
             if (autoMode) {
                 clock.restart();
                 time = time / 1200;
                 character.autoMove(CurrentFrame, time, autoMode);
+                getplayercoordinateforview(character.x, character.y);
             }
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+                autoMode = 1;
+                character.navigation.search(character.x_pos, character.y_pos);
+
+
+                //auto nextPos = character.navigation.path.front();
+                //int dir_x = nextPos.first - character.x_pos;
+                //int dir_y = nextPos.second - character.y_pos;
+                //setDir(dir_x, dir_y);
+                character.setInCenter();
+            }
+
+
 
             if (!autoMode) {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
@@ -239,6 +256,14 @@ public:
                     currentWind.draw(this->s_map);//рисуем квадратики на экран
                 }
             }
+
+            std::ostringstream playerScoreString;
+            std::ostringstream Pos_X_str, Pos_Y_str;
+            Pos_X_str << character.x_pos;
+            Pos_Y_str << character.y_pos;
+            scoreValue.setString("Pos_x: " + Pos_X_str.str());
+            scoreValue.setPosition(view.getCenter().x, view.getCenter().y);
+            currentWind.draw(scoreValue);
             currentWind.draw(character.characterSprite);
             currentWind.display();
 

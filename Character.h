@@ -4,8 +4,9 @@
 #include"observed_area.h"
 
 class Character {
-public: float x, y,  speedMove, speedRun, h, w, dx, dy;
-      int x_pos, y_pos, dir;
+public: 
+      float x, y,  speedMove, speedRun, h, w, dx, dy;
+      int x_pos, y_pos, dir, playerScore;
       String Picture_name;
       Image characterImage;
       Texture characterTexture;
@@ -13,17 +14,11 @@ public: float x, y,  speedMove, speedRun, h, w, dx, dy;
       Map MAP;
       AStarSearch navigation = AStarSearch(MAP.Grid);
 
-      Character(/*Map MAP*/) : x_pos(1.5), y_pos(2.5), h(74), w(75), speedMove(0.05), speedRun(0.5 /*0.1*/), dir(0), dx(1), dy(0), Picture_name("Knight_spikes.png") {
-          //this->x = 500;
-          //this->y = 500;
-          h = 74;
-          w = 75;
+      Character() : x_pos(1.5), y_pos(2.5), h(74), w(75), speedMove(0.05), speedRun(0.5 /*0.1*/), dir(0), dx(1), dy(0), Picture_name("Knight_spikes.png") {
+
           x = x_pos * PICTURE_RESOLUTION;
           y = y_pos * PICTURE_RESOLUTION;
-          //x_pos = x / PICTURE_RESOLUTION;
-          //y_pos = y / PICTURE_RESOLUTION;
-
-          Picture_name = "Knight_spikes.png";
+          playerScore = 0;
 
           this->characterImage.loadFromFile("pictures/" + this->Picture_name);
 
@@ -47,20 +42,11 @@ public: float x, y,  speedMove, speedRun, h, w, dx, dy;
           this->characterSprite.setPosition(this->x, this->y);
       }
 
-      //float getX() {
-      //    return x;
-      //}
-      //
-      //float getY() {
-      //    return y;
-      //}
 
       void autoMove(float& CurrentFrame, float& time, bool& autoMode) {
           if (!navigation.path.empty()) {
-              // Get the next position from the path
               auto nextPos = navigation.path.front();
 
-              // Calculate the direction to the next position
               int dir_x = nextPos.first - x_pos;
               int dir_y = nextPos.second - y_pos;
 
@@ -71,14 +57,14 @@ public: float x, y,  speedMove, speedRun, h, w, dx, dy;
               autoChangeSpike(CurrentFrame, time);
 
               // Update the character's position
+              setDirection(time);
               update(time, autoMode);
 
               // Remove the reached position from the path
-              if(!(floor(x_pos) == nextPos.first && floor(y_pos) == nextPos.second))
+              if(floor(x_pos) == nextPos.first && floor(y_pos) == nextPos.second)
                 navigation.path.erase(navigation.path.begin());
           }
           else {
-              // If the path is empty, set autoMode to true
               autoMode = 0;
           }
       }
@@ -117,73 +103,73 @@ public: float x, y,  speedMove, speedRun, h, w, dx, dy;
 
 
 
+      /*
+      void autoMove(float& CurrentFrame, float &time, bool& autoMode) {
+            int dir_x, dir_y;
+            if (!navigation.path.empty()) {
+                auto p = navigation.path[0];
+                dir_x = p.first - x_pos;
+                dir_y = p.second - y_pos;
+                setDir(dir_x, dir_y);
+                autoChangeSpike(CurrentFrame, time);
+                update(time);
+                navigation.path.erase(navigation.path.begin());
+            }
+            else
+                autoMode = 1;
+      }
+      void autoChangeSpike(float &CurrentFrame, float& time) {
+          int coordinates[3][3] = {
+            {67, 250, 430},
+            {25, 210, 400},
+            {66, 250, 435}
+          };
+          switch (dir) {
+          case 0:
+              CurrentFrame += speedMove * time;
+              if (CurrentFrame > 3)
+                  CurrentFrame -= 3;
+              characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 25, 75, 74));
+              break;
+          case 1:
+              CurrentFrame += speedMove * time;
+              if (CurrentFrame > 3)
+                  CurrentFrame -= 3;
+              characterSprite.setTextureRect(IntRect(600, coordinates[1][int(CurrentFrame)], 75, 74));
+              break;
+          case 2:
+              CurrentFrame += speedMove * time;
+              if (CurrentFrame > 3)
+                  CurrentFrame -= 3;
+              characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 400, 75, 74));
+              break;
+          case 3:
+              CurrentFrame += speedMove * time;
+              if (CurrentFrame > 3)
+                  CurrentFrame -= 3;
+              characterSprite.setTextureRect(IntRect(coordinates[2][int(CurrentFrame)], 210, 75, 74));
+              break;
+          }
+          setDirection(time);
+      }
+      */
 
-      //void autoMove(float& CurrentFrame, float &time, bool& autoMode) {
-      //      int dir_x, dir_y;
-      //      if (!navigation.path.empty()) {
-      //          auto p = navigation.path[0];
-      //          dir_x = p.first - x_pos;
-      //          dir_y = p.second - y_pos;
-      //          setDir(dir_x, dir_y);
-      //          autoChangeSpike(CurrentFrame, time);
-      //          update(time);
-      //          navigation.path.erase(navigation.path.begin());
-      //      }
-      //      else
-      //          autoMode = 1;
-      //}
+      void setInCenter() {
+          characterSprite.setPosition(x_pos*PICTURE_RESOLUTION + PICTURE_RESOLUTION/2, y*PICTURE_RESOLUTION);
 
-      //void autoChangeSpike(float &CurrentFrame, float& time) {
+      }
 
-      //    int coordinates[3][3] = {
-      //      {67, 250, 430},
-      //      {25, 210, 400},
-      //      {66, 250, 435}
-      //    };
-
-      //    switch (dir) {
-      //    case 0:
-      //        CurrentFrame += speedMove * time;
-      //        if (CurrentFrame > 3)
-      //            CurrentFrame -= 3;
-      //        characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 25, 75, 74));
-      //        break;
-      //    case 1:
-      //        CurrentFrame += speedMove * time;
-      //        if (CurrentFrame > 3)
-      //            CurrentFrame -= 3;
-      //        characterSprite.setTextureRect(IntRect(600, coordinates[1][int(CurrentFrame)], 75, 74));
-      //        break;
-      //    case 2:
-      //        CurrentFrame += speedMove * time;
-      //        if (CurrentFrame > 3)
-      //            CurrentFrame -= 3;
-      //        characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 400, 75, 74));
-      //        break;
-      //    case 3:
-      //        CurrentFrame += speedMove * time;
-      //        if (CurrentFrame > 3)
-      //            CurrentFrame -= 3;
-      //        characterSprite.setTextureRect(IntRect(coordinates[2][int(CurrentFrame)], 210, 75, 74));
-      //        break;
-      //    }
-      //    setDirection(time);
-      //}
-
-
-
-      void currentPos(int corr) {
-          
-          x_pos = (x+corr) / PICTURE_RESOLUTION;
-          y_pos = (y+corr) / PICTURE_RESOLUTION;
+      void getGridPos() {
+          x_pos = x / PICTURE_RESOLUTION;
+          y_pos = y / PICTURE_RESOLUTION;
       }
 
       void setDir(int dir_x, int dir_y) {
           if (dir_x == 0) {
               if (dir_y == 1)
-                  dir = 1;
-              else
                   dir = 3;
+              else
+                  dir = 1;
           }
           else {
               if (dir_x == 1)
@@ -215,17 +201,13 @@ public: float x, y,  speedMove, speedRun, h, w, dx, dy;
       }
 
       void update(float time, bool autoMode) {
-          int corr = 0;
           x += dx;
           y += dy;
 
-          if (autoMode)
-              corr = 40;
-
-
-          characterSprite.setPosition(x+ corr, y+corr);
+ 
+          characterSprite.setPosition(x, y);
           interactionWithMap();
-          currentPos(corr);
+          getGridPos();
       }
 
       void interactionWithMap()
