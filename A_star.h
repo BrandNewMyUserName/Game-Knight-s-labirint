@@ -1,4 +1,5 @@
 #pragma once
+#include "Map.h"
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -7,16 +8,18 @@
 
 using namespace std;
 
-#define ROW 7
-#define COL 12
+
 
 typedef pair<int, int> Pair;
 
 typedef pair<double, pair<int, int>> pPair;
 
 class AStarSearch {
-private:
-    int grid[ROW][COL];
+public:
+    int grid[HEIGHT_MAP][WIDTH_MAP];
+    Pair src;
+    Pair dest;
+    vector<Pair> path;
     bool foundDest;
 
     struct cell {
@@ -25,14 +28,14 @@ private:
     };
 
     vector<vector<bool>> closedList;
-    cell cellDetails[ROW][COL];
+    cell cellDetails[HEIGHT_MAP][WIDTH_MAP];
 
     bool isValid(int row, int col) {
-        return (row >= 0) && (row < ROW) && (col >= 0) && (col < COL);
+        return (row >= 0) && (row < HEIGHT_MAP) && (col >= 0) && (col < WIDTH_MAP);
     }
 
     bool isUnBlocked(int row, int col) {
-        return (grid[row][col] == 1);
+        return (grid[row][col] == 0);
     }
 
     bool isDestination(int row, int col, Pair dest) {
@@ -58,15 +61,21 @@ private:
 
         path.push_back(make_pair(row, col));
         reverse(path.begin(), path.end());
+        path.erase(path.begin());
     }
 
 public:
-    AStarSearch(int inputGrid[ROW][COL]) {
+    AStarSearch(vector<string> inputGrid) {
         foundDest = false;
-        closedList.resize(ROW, vector<bool>(COL, false));
-        for (int i = 0; i < ROW; i++) {
-            for (int j = 0; j < COL; j++) {
-                grid[i][j] = inputGrid[i][j];
+        closedList.resize(HEIGHT_MAP, vector<bool>(WIDTH_MAP, false));
+        for (int i = 0; i < HEIGHT_MAP; i++) {
+            for (int j = 0; j < WIDTH_MAP; j++) {
+                if (inputGrid[i][j] == '0' /*|| inputGrid[i][j] == 'd'*/)
+                    grid[i][j] = 1;
+                else
+                    grid[i][j] = 0;
+                if (inputGrid[i][j] == 't')
+                    dest = make_pair(j, i);
                 cellDetails[i][j].f = numeric_limits<double>::max();
                 cellDetails[i][j].g = numeric_limits<double>::max();
                 cellDetails[i][j].h = numeric_limits<double>::max();
@@ -76,7 +85,8 @@ public:
         }
     }
 
-    bool search(Pair src, Pair dest, vector<Pair>& path) {
+    bool search(int x_pos, int y_pos) {
+        src = make_pair(x_pos, y_pos);
         if (!isValid(src.first, src.second) || !isValid(dest.first, dest.second) ||
             !isUnBlocked(src.first, src.second) || !isUnBlocked(dest.first, dest.second)) {
             return false;

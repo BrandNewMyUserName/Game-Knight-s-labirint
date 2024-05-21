@@ -1,228 +1,25 @@
 #pragma once
 #include<iostream>
 #include <SFML/Graphics.hpp>
+#include "Character.h"
 #include "Map.h"
+#include "A_Star.h"
+#include "observed_area.h"
 
 //const int EXIT_GAME = 1;
 //const int PLAY_GAME = 0;
-#define PICTURE_RESOLUTION 32
+#define PICTURE_RESOLUTION 80
 
 using namespace sf;
 using namespace std;
 
-
-class Character {
-public: float x, y, speedMove, speedRun, h, w, dx, dy;
-        int  dir;
-      String Picture_name;
-      Image characterImage;
-      Texture characterTexture;
-      Sprite characterSprite;
-      Map MAP;
-
-      Character(/*Map MAP*/): x(250), y(250), h(74), w(75), speedMove(0.05), speedRun(0.1), dir(0), dx(1), dy(0), Picture_name("Knight_spikes.png"){
-          //this->x = 500;
-          //this->y = 500;
-          h = 74;
-          w = 75;
-          Picture_name = "Knight_spikes.png";
-
-          this->characterImage.loadFromFile("pictures/" + this->Picture_name);
-
-//Try-Catch
-  /*        this->characterImage;
-          try {
-              if (!this->characterImage.loadFromFile("pictures/" + this->Picture_name)) {
-                  throw "Unable to find a character image";
-              }
-          }
-          catch (const char* exception)
-          {
-              cerr << "Error: " << exception << '\n';
-          }*/
-
-          this->characterTexture.loadFromImage(this->characterImage);
-
-          this->characterSprite.setTexture(this->characterTexture);
-          this->characterSprite.setTextureRect(IntRect(8, 15, 180, 112));
-       
-          this->characterSprite.setPosition(this->x, this->y);
-      }
-
-      float getX() {
-          return x;
-      }
-
-      float getY() {
-          return y;
-      }
-
-      void setDirection() {
-
-
-          switch (dir) {
-          case 0:
-              dx = speedRun; // *time;
-              dy = 0;
-              break;
-          case 1:
-              dx = 0;
-              dy = -speedRun;// *time;
-              break;
-          case 2:
-              dx = -speedRun;// *time;
-              dy = 0;
-              break;
-          case 3:
-              dx = 0;
-              dy = speedRun;// *time;
-              break;
-          }
-      }
-
-      void update() {
-          setDirection();
-
-          x += dx;
-          y += dy;
-
-          characterSprite.setPosition(x, y);
-          interactionWithMap(dir);
-
-      }
-
-      void interactionWithMap(float time)
-      {
-
-
-          for (int i = y / PICTURE_RESOLUTION; i < (y + h) / PICTURE_RESOLUTION; i++)//проходимся по тайликам, контактирующим с игроком, то есть по всем квадратикам размера PICTURE_RESOLUTION*PICTURE_RESOLUTION, которые мы окрашивали в 9 уроке. про условия читайте ниже.
-              for (int j = x / PICTURE_RESOLUTION; j < (x + w) / PICTURE_RESOLUTION; j++)//икс делим на PICTURE_RESOLUTION, тем самым получаем левый квадратик, с которым персонаж соприкасается. (он ведь больше размера PICTURE_RESOLUTION*PICTURE_RESOLUTION, поэтому может одновременно стоять на нескольких квадратах). А j<(x + w) / PICTURE_RESOLUTION - условие ограничения координат по иксу. то есть координата самого правого квадрата, который соприкасается с персонажем. таким образом идем в цикле слева направо по иксу, проходя по от левого квадрата (соприкасающегося с героем), до правого квадрата (соприкасающегося с героем)
-              {
-                  if (MAP.Grid[i][j] == '0')
-                  {
-                      switch (dir) {
-                          case 0: x = j * PICTURE_RESOLUTION - w; break;
-                          case 1: y = i * PICTURE_RESOLUTION + PICTURE_RESOLUTION; break;
-                          case 2: x = j * PICTURE_RESOLUTION + PICTURE_RESOLUTION; break;
-                          case 3: y = i * PICTURE_RESOLUTION - h; break;
-                      }
-                  }
-
-
-                  
- 
-                  
-
- /*                 if (MAP.Grid[i][j] == '0')
-                      
-                      characterSprite.setPosition(500, 500);*/
-
-                  //if (MAP.Grid[i][j] == 's') { //если символ равен 's' (камень)
-                  //    x = 300; y = 300;//какое то действие... например телепортация героя
-                  //    MAP.Grid[i][j] = ' ';//убираем камень, типа взяли бонус. можем и не убирать, кстати.
-                  //}
-              }
-      }
-
-      //void update(float time) {
-      //    switch (dir) {
-      //    case 0: dx = speedRun*time; dy = 0; break;
-      //    case 1: dx = -speedRun * time; dy = 0; break;
-      //    case 2: dx = 0; dy = speedRun * time; break;
-      //    case 3: dx = 0; dy = -speedRun * time; break;
-      //    }
-
-      //    //x += dx * time;
-      //    //y += dy * time;
-      //    //speedRun = 0;
-      //    characterSprite.setPosition(dx, dy);
-      //    //characterSprite.move(dx, dy);
-      //    //characterSprite.setPosition(x, y);
-      //    //interactionWithMap(time);
-      //}
-
-      void toMove(float& CurrentFrame, float& time) {
-
-          int coordinates[3][3] = {
-              {67, 250, 430},
-              {25, 210, 400},
-              {66, 250, 435}
-          };
-
-          if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-              CurrentFrame += speedMove * time;
-              if (CurrentFrame > 3)
-                  CurrentFrame -= 3;
-              characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 400, 75, 74));
-              dir = 2;
-          }
-          if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-              CurrentFrame += speedMove * time;
-              if (CurrentFrame > 3)
-                  CurrentFrame -= 3;
-              characterSprite.setTextureRect(IntRect(600, coordinates[1][int(CurrentFrame)], 75, 74));
-              dir = 1;
-          }
-          if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-              CurrentFrame += speedMove * time;
-              if (CurrentFrame > 3)
-                  CurrentFrame -= 3;
-              characterSprite.setTextureRect(IntRect(coordinates[2][int(CurrentFrame)], 210, 75, 74));
-              dir = 3;
-          }
-          if ((sf::Keyboard::isKeyPressed(Keyboard::D))) {
-              CurrentFrame += speedMove * time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив speedMove можно изменить скорость анимации
-              if (CurrentFrame > 3)
-                  CurrentFrame -= 3;
-              characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 25, 75, 74));
-              dir = 0;
-          }
-            
-          update();
-
-
-
-          //if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-          //    CurrentFrame += speedMove * time;
-          //    if (CurrentFrame > 3)
-          //        CurrentFrame -= 3;
-          //    characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 400, 75, 74));
-          //    characterSprite.move(-speedRun * time, 0);
-          //    dir = 2;
-          //}
-          //if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-          //    CurrentFrame += speedMove * time;
-          //    if (CurrentFrame > 3)
-          //        CurrentFrame -= 3;
-          //    characterSprite.setTextureRect(IntRect(600, coordinates[1][int(CurrentFrame)], 75, 74));
-          //    characterSprite.move(0, -speedRun * time);
-          //    dir = 1;
-          //}
-          //if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-          //    CurrentFrame += speedMove * time;
-          //    if (CurrentFrame > 3)
-          //        CurrentFrame -= 3;
-          //    characterSprite.setTextureRect(IntRect(coordinates[2][int(CurrentFrame)], 210, 75, 74));
-          //    characterSprite.move(0, speedRun * time);
-          //    dir = 3;
-          //}
-          //if ((sf::Keyboard::isKeyPressed(Keyboard::D))) {
-          //    CurrentFrame += speedMove * time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив speedMove можно изменить скорость анимации
-          //    if (CurrentFrame > 3)
-          //        CurrentFrame -= 3;
-          //    characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 25, 75, 74));
-          //    characterSprite.move(speedRun * time, 0);
-          //    dir = 0;
-          //}
-      }
-
-};
 
 class GameWind { // Rename
 public:
     int width_screen, height_screen;
     String WindowName;
     Character character;
+    bool autoMode = 0;
 
     Map MAP = Map();
 
@@ -233,11 +30,11 @@ public:
 
     RenderWindow currentWind;
 
-    GameWind(): currentWind(sf::VideoMode(1900, 1050), "Knight's Labyrinth: Treasure Hunt"), character(/*this->MAP*/) {
-        this->width_screen = 1920;
-        this->height_screen = 1080;
+    GameWind(): currentWind(sf::VideoMode(1920, 1080), "Knight's Labyrinth: Treasure Hunt"), character(/*this->MAP*/) {
+        this->width_screen = 1920; //1900
+        this->height_screen = 1080; //1050
         this->WindowName = "Knight's Labyrinth: Treasure Hunt";
-        imageLink = "map.png";
+        imageLink = "map(80x80).jpg";
 
 //Try-Catch
   /*      try {
@@ -257,8 +54,7 @@ public:
 
 
     int run() {
-        //currentWind(sf::VideoMode(1900, 1050), "Knight's Labyrinth: Treasure Hunt");
-        //currentWind.create(VideoMode(this->width_screen, this->height_screen), this->WindowName /*,sf::Style::Fullscreen*/);
+        view.reset(FloatRect(0, 0, 800, 450));
         int nextState;
         float CurrentFrame = 0;
         Clock clock;
@@ -277,8 +73,19 @@ public:
                 }
             }
 
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+                autoMode = 1;
+                character.navigation.search(character.x_pos, character.y_pos);
+            }
+
+            if (autoMode) {
+                character.autoMove(CurrentFrame, time, autoMode);
+            }
+
+            if(!autoMode)
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
                 character.toMove(CurrentFrame, time);
+                getplayercoordinateforview(character.x, character.y);
  
             }
                 
@@ -410,19 +217,19 @@ public:
                 //nextState = 1;
             }
             //character.update(time);
-            currentWind.clear();
+            currentWind.setView(view);//"оживляем" камеру в окне sfml
+            currentWind.clear(Color(59, 62, 39));
 
-
-            //void draw();
 
             for (int i = 0; i < HEIGHT_MAP; i++) {
                 for (int j = 0; j < WIDTH_MAP; j++)
                 {
                     if (MAP.Grid[i][j] == ' ')
-                        this->s_map.setTextureRect(IntRect(0, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION)); // Шляхи 
+                        this->s_map.setTextureRect(IntRect(0, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));                    // Шляхи 
                     if (MAP.Grid[i][j] == '0')
-                        this->s_map.setTextureRect(IntRect(PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));//Стіни
-                    //if ((Map[i][j] == )) s_map.setTextureRect(IntRect(64, 0, 32, 32));//если встретили символ 0, то рисуем 3й квадратик
+                        this->s_map.setTextureRect(IntRect(PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // Стіни
+                    if (MAP.Grid[i][j] == 't')
+                        this->s_map.setTextureRect(IntRect(3*PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION)); // Скарбниця
 
 
                     this->s_map.setPosition(j * PICTURE_RESOLUTION, i * PICTURE_RESOLUTION);//по сути раскидывает квадратики, превращая в карту. то есть задает каждому из них позицию. если убрать, то вся карта нарисуется в одном квадрате 32*32 и мы увидим один квадрат
