@@ -4,8 +4,8 @@
 #include"observed_area.h"
 
 class Character {
-public: float x, y, speedMove, speedRun, h, w, dx, dy;
-      int  dir, x_pos, y_pos;
+public: float x, y,  speedMove, speedRun, h, w, dx, dy;
+      int x_pos, y_pos, dir;
       String Picture_name;
       Image characterImage;
       Texture characterTexture;
@@ -13,13 +13,15 @@ public: float x, y, speedMove, speedRun, h, w, dx, dy;
       Map MAP;
       AStarSearch navigation = AStarSearch(MAP.Grid);
 
-      Character(/*Map MAP*/) : x(250), y(250), h(74), w(75), speedMove(0.05), speedRun(0.5 /*0.1*/), dir(0), dx(1), dy(0), Picture_name("Knight_spikes.png") {
+      Character(/*Map MAP*/) : x_pos(1.5), y_pos(2.5), h(74), w(75), speedMove(0.05), speedRun(0.5 /*0.1*/), dir(0), dx(1), dy(0), Picture_name("Knight_spikes.png") {
           //this->x = 500;
           //this->y = 500;
           h = 74;
           w = 75;
-          x_pos = x / PICTURE_RESOLUTION;
-          y_pos = y / PICTURE_RESOLUTION;
+          x = x_pos * PICTURE_RESOLUTION;
+          y = y_pos * PICTURE_RESOLUTION;
+          //x_pos = x / PICTURE_RESOLUTION;
+          //y_pos = y / PICTURE_RESOLUTION;
 
           Picture_name = "Knight_spikes.png";
 
@@ -53,62 +55,127 @@ public: float x, y, speedMove, speedRun, h, w, dx, dy;
       //    return y;
       //}
 
+      void autoMove(float& CurrentFrame, float& time, bool& autoMode) {
+          if (!navigation.path.empty()) {
+              // Get the next position from the path
+              auto nextPos = navigation.path.front();
 
-      void autoMove(float& CurrentFrame, float &time, bool& autoMode) {
-            int dir_x, dir_y;
-            if (!navigation.path.empty()) {
-                auto p = navigation.path[0];
-                dir_x = p.first - x_pos;
-                dir_y = p.second - y_pos;
-                setDir(dir_x, dir_y);
-                autoChangeSpike(CurrentFrame, time);
-                update(time);
+              // Calculate the direction to the next position
+              int dir_x = nextPos.first - x_pos;
+              int dir_y = nextPos.second - y_pos;
+
+              // Set the direction based on the calculated direction
+              setDir(dir_x, dir_y);
+
+              // Update the character's animation frame
+              autoChangeSpike(CurrentFrame, time);
+
+              // Update the character's position
+              update(time, autoMode);
+
+              // Remove the reached position from the path
+              if(!(floor(x_pos) == nextPos.first && floor(y_pos) == nextPos.second))
                 navigation.path.erase(navigation.path.begin());
-            }
-            else
-                autoMode = 1;
+          }
+          else {
+              // If the path is empty, set autoMode to true
+              autoMode = 0;
+          }
       }
 
-      void autoChangeSpike(float &CurrentFrame, float& time) {
 
+      void autoChangeSpike(float& CurrentFrame, float& time) {
           int coordinates[3][3] = {
-            {67, 250, 430},
-            {25, 210, 400},
-            {66, 250, 435}
+              {67, 250, 430},
+              {25, 210, 400},
+              {66, 250, 435}
           };
 
           switch (dir) {
           case 0:
               CurrentFrame += speedMove * time;
-              if (CurrentFrame > 3)
-                  CurrentFrame -= 3;
-              characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 25, 75, 74));
+              if (CurrentFrame > 3) CurrentFrame-= 3;
+              characterSprite.setTextureRect(IntRect(coordinates[0][static_cast<int>(CurrentFrame)], 25, 75, 74));
               break;
           case 1:
               CurrentFrame += speedMove * time;
-              if (CurrentFrame > 3)
-                  CurrentFrame -= 3;
-              characterSprite.setTextureRect(IntRect(600, coordinates[1][int(CurrentFrame)], 75, 74));
+              if (CurrentFrame > 3) CurrentFrame -= 3;
+              characterSprite.setTextureRect(IntRect(600, coordinates[1][static_cast<int>(CurrentFrame)], 75, 74));
               break;
           case 2:
               CurrentFrame += speedMove * time;
-              if (CurrentFrame > 3)
-                  CurrentFrame -= 3;
-              characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 400, 75, 74));
+              if (CurrentFrame > 3) CurrentFrame -= 3;
+              characterSprite.setTextureRect(IntRect(coordinates[0][static_cast<int>(CurrentFrame)], 400, 75, 74));
               break;
           case 3:
               CurrentFrame += speedMove * time;
-              if (CurrentFrame > 3)
-                  CurrentFrame -= 3;
-              characterSprite.setTextureRect(IntRect(coordinates[2][int(CurrentFrame)], 210, 75, 74));
+              if (CurrentFrame > 3) CurrentFrame -= 3;
+              characterSprite.setTextureRect(IntRect(coordinates[2][static_cast<int>(CurrentFrame)], 210, 75, 74));
               break;
           }
-          setDirection(time);
       }
 
-      void currentPos() {
-          x_pos = x / PICTURE_RESOLUTION;
-          y_pos = y / PICTURE_RESOLUTION;
+
+
+
+      //void autoMove(float& CurrentFrame, float &time, bool& autoMode) {
+      //      int dir_x, dir_y;
+      //      if (!navigation.path.empty()) {
+      //          auto p = navigation.path[0];
+      //          dir_x = p.first - x_pos;
+      //          dir_y = p.second - y_pos;
+      //          setDir(dir_x, dir_y);
+      //          autoChangeSpike(CurrentFrame, time);
+      //          update(time);
+      //          navigation.path.erase(navigation.path.begin());
+      //      }
+      //      else
+      //          autoMode = 1;
+      //}
+
+      //void autoChangeSpike(float &CurrentFrame, float& time) {
+
+      //    int coordinates[3][3] = {
+      //      {67, 250, 430},
+      //      {25, 210, 400},
+      //      {66, 250, 435}
+      //    };
+
+      //    switch (dir) {
+      //    case 0:
+      //        CurrentFrame += speedMove * time;
+      //        if (CurrentFrame > 3)
+      //            CurrentFrame -= 3;
+      //        characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 25, 75, 74));
+      //        break;
+      //    case 1:
+      //        CurrentFrame += speedMove * time;
+      //        if (CurrentFrame > 3)
+      //            CurrentFrame -= 3;
+      //        characterSprite.setTextureRect(IntRect(600, coordinates[1][int(CurrentFrame)], 75, 74));
+      //        break;
+      //    case 2:
+      //        CurrentFrame += speedMove * time;
+      //        if (CurrentFrame > 3)
+      //            CurrentFrame -= 3;
+      //        characterSprite.setTextureRect(IntRect(coordinates[0][int(CurrentFrame)], 400, 75, 74));
+      //        break;
+      //    case 3:
+      //        CurrentFrame += speedMove * time;
+      //        if (CurrentFrame > 3)
+      //            CurrentFrame -= 3;
+      //        characterSprite.setTextureRect(IntRect(coordinates[2][int(CurrentFrame)], 210, 75, 74));
+      //        break;
+      //    }
+      //    setDirection(time);
+      //}
+
+
+
+      void currentPos(int corr) {
+          
+          x_pos = (x+corr) / PICTURE_RESOLUTION;
+          y_pos = (y+corr) / PICTURE_RESOLUTION;
       }
 
       void setDir(int dir_x, int dir_y) {
@@ -147,12 +214,18 @@ public: float x, y, speedMove, speedRun, h, w, dx, dy;
           }
       }
 
-      void update(float time) {
+      void update(float time, bool autoMode) {
+          int corr = 0;
           x += dx;
           y += dy;
-          characterSprite.setPosition(x, y);
+
+          if (autoMode)
+              corr = 40;
+
+
+          characterSprite.setPosition(x+ corr, y+corr);
           interactionWithMap();
-          currentPos();
+          currentPos(corr);
       }
 
       void interactionWithMap()
@@ -187,7 +260,7 @@ public: float x, y, speedMove, speedRun, h, w, dx, dy;
       //    case 3: dx = 0; dy = -speedRun * time; break;
       //    }
 
-      void toMove(float& CurrentFrame, float& time) {
+      void toMove(float& CurrentFrame, float& time, bool& autoMode) {
 
           int coordinates[3][3] = {
               {67, 250, 430},
@@ -225,7 +298,7 @@ public: float x, y, speedMove, speedRun, h, w, dx, dy;
           }
 
           setDirection(time);
-          update(time);
+          update(time, autoMode);
 
 
 

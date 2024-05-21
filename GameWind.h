@@ -30,11 +30,9 @@ public:
 
     RenderWindow currentWind;
 
-    GameWind(): currentWind(sf::VideoMode(1920, 1080), "Knight's Labyrinth: Treasure Hunt"), character(/*this->MAP*/) {
-        this->width_screen = 1920; //1900
-        this->height_screen = 1080; //1050
-        this->WindowName = "Knight's Labyrinth: Treasure Hunt";
-        imageLink = "map(80x80).jpg";
+    GameWind(): width_screen(1920 /*1900*/), height_screen(1080 /*1050*/), WindowName("Knight's Labyrinth: Treasure Hunt"), imageLink("map(80x80).jpg") {
+
+        currentWind.create(VideoMode(width_screen, height_screen), WindowName);
 
 //Try-Catch
   /*      try {
@@ -54,7 +52,9 @@ public:
 
 
     int run() {
-        view.reset(FloatRect(0, 0, 800, 450));
+        view.reset(FloatRect(character.x, character.y, 800, 450));
+        getplayercoordinateforview(character.x, character.y);
+
         int nextState;
         float CurrentFrame = 0;
         Clock clock;
@@ -79,15 +79,18 @@ public:
             }
 
             if (autoMode) {
+                clock.restart();
+                time = time / 1200;
                 character.autoMove(CurrentFrame, time, autoMode);
             }
 
-            if(!autoMode)
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-                character.toMove(CurrentFrame, time);
-                getplayercoordinateforview(character.x, character.y);
- 
+            if (!autoMode) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+                    character.toMove(CurrentFrame, time, autoMode);
+                    getplayercoordinateforview(character.x, character.y);
+                }
             }
+
                 
 
 
@@ -212,7 +215,6 @@ public:
 */
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-                break;
                 currentWind.close();
                 //nextState = 1;
             }
@@ -248,15 +250,6 @@ public:
 
 
     }
-
-
-    void draw() {
-
-
-
-    }
-
-
 
 };
 
