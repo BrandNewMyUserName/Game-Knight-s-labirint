@@ -62,7 +62,6 @@ public:
         scoreValue.setStyle(Text::Bold);
         scoreValue.setFillColor(Color::Red);
 
-        int nextState;
         float CurrentFrame = 0;
         Clock clock;
 
@@ -269,7 +268,6 @@ public:
 
 
         }
-        //return nextState;
         currentWind.close();
         return EXIT_SUCCESS;
 

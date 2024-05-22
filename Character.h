@@ -14,7 +14,7 @@ public:
       Map MAP;
       AStarSearch navigation = AStarSearch(MAP.Grid);
 
-      Character() : x_pos(1.5), y_pos(2.5), h(74), w(75), speedMove(0.05), speedRun(0.5 /*0.1*/), dir(0), dx(1), dy(0), Picture_name("Knight_spikes.png") {
+      Character() : x_pos(0), y_pos(1), h(74), w(75), speedMove(0.05), speedRun(0.5 /*0.1*/), dir(0), dx(1), dy(0), Picture_name("Knight_spikes.png") {
 
           x = x_pos * PICTURE_RESOLUTION;
           y = y_pos * PICTURE_RESOLUTION;
@@ -79,22 +79,22 @@ public:
 
           switch (dir) {
           case 0:
-              CurrentFrame += speedMove * time;
+              CurrentFrame += speedMove;
               if (CurrentFrame > 3) CurrentFrame-= 3;
               characterSprite.setTextureRect(IntRect(coordinates[0][static_cast<int>(CurrentFrame)], 25, 75, 74));
               break;
           case 1:
-              CurrentFrame += speedMove * time;
+              CurrentFrame += speedMove ;
               if (CurrentFrame > 3) CurrentFrame -= 3;
               characterSprite.setTextureRect(IntRect(600, coordinates[1][static_cast<int>(CurrentFrame)], 75, 74));
               break;
           case 2:
-              CurrentFrame += speedMove * time;
+              CurrentFrame += speedMove ;
               if (CurrentFrame > 3) CurrentFrame -= 3;
               characterSprite.setTextureRect(IntRect(coordinates[0][static_cast<int>(CurrentFrame)], 400, 75, 74));
               break;
           case 3:
-              CurrentFrame += speedMove * time;
+              CurrentFrame += speedMove ;
               if (CurrentFrame > 3) CurrentFrame -= 3;
               characterSprite.setTextureRect(IntRect(coordinates[2][static_cast<int>(CurrentFrame)], 210, 75, 74));
               break;
@@ -182,20 +182,20 @@ public:
       void setDirection(float time) {
           switch (dir) {
           case 0:
-              dx = speedRun * time;
+              dx = speedRun ;
               dy = 0;
               break;
           case 1:
               dx = 0;
-              dy = -speedRun * time;
+              dy = -speedRun ;
               break;
           case 2:
-              dx = -speedRun * time;
+              dx = -speedRun ;
               dy = 0;
               break;
           case 3:
               dx = 0;
-              dy = speedRun * time;
+              dy = speedRun ;
               break;
           }
       }
