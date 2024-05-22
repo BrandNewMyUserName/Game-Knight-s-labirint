@@ -7,8 +7,6 @@
 #include "A_Star.h"
 #include "observed_area.h"
 
-//const int EXIT_GAME = 1;
-//const int PLAY_GAME = 0;
 #define PICTURE_RESOLUTION 80
 
 using namespace sf;
@@ -95,8 +93,10 @@ public:
                 //int dir_x = nextPos.first - character.x_pos;
                 //int dir_y = nextPos.second - character.y_pos;
                 //setDir(dir_x, dir_y);
-                character.setInCenter();
+                character.placeInAngle();
+     
             }
+
 
 
 
@@ -238,6 +238,9 @@ public:
             currentWind.setView(view);//"оживляем" камеру в окне sfml
             currentWind.clear(Color(59, 62, 39));
 
+            this->s_map.setTextureRect(IntRect(0, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));
+            this->s_map.setPosition(0 * PICTURE_RESOLUTION, 0 * PICTURE_RESOLUTION);//по сути раскидывает квадратики, превращая в карту. то есть задает каждому из них позицию. если убрать, то вся карта нарисуется в одном квадрате 32*32 и мы увидим один квадрат
+            currentWind.draw(this->s_map);
 
             for (int i = 0; i < HEIGHT_MAP; i++) {
                 for (int j = 0; j < WIDTH_MAP; j++)
