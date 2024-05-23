@@ -67,15 +67,15 @@ public:
 public:
     AStarSearch(vector<string> inputGrid) {
         foundDest = false;
-        closedList.resize(HEIGHT_MAP, vector<bool>(WIDTH_MAP, false));
+        closedList.resize(WIDTH_MAP, vector<bool>(HEIGHT_MAP, false));
         for (int i = 0; i < HEIGHT_MAP; i++) {
             for (int j = 0; j < WIDTH_MAP; j++) {
-                if (inputGrid[i][j] == '0' /*|| inputGrid[i][j] == 'd'*/)
+                if (inputGrid[j][i] == '0' /*|| inputGrid[i][j] == 'd'*/)
                     grid[i][j] = 1;
                 else
                     grid[i][j] = 0;
                 if (inputGrid[i][j] == 't')
-                    dest = make_pair(j, i);
+                    dest = make_pair(i, j);
                 cellDetails[i][j].f = numeric_limits<double>::max();
                 cellDetails[i][j].g = numeric_limits<double>::max();
                 cellDetails[i][j].h = numeric_limits<double>::max();
@@ -86,7 +86,7 @@ public:
     }
 
     bool search(int x_pos, int y_pos) {
-        src = make_pair(x_pos, y_pos);
+        src = make_pair(y_pos, x_pos);
         if (!isValid(src.first, src.second) || !isValid(dest.first, dest.second) ||
             !isUnBlocked(src.first, src.second) || !isUnBlocked(dest.first, dest.second)) {
             return false;

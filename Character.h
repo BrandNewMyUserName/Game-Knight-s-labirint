@@ -44,6 +44,12 @@ public:
         if (!navigation.path.empty()) {
             auto nextPos = navigation.path.front();
 
+            //if ((x - nextPos.first * PICTURE_RESOLUTION) == 0 && (y - nextPos.second * PICTURE_RESOLUTION) == 0)
+            //    navigation.path.erase(navigation.path.begin());
+
+            if ((x - nextPos.first * PICTURE_RESOLUTION) == 0 && (y - nextPos.second * PICTURE_RESOLUTION) == 0)
+                navigation.path.erase(navigation.path.begin());
+
             int dir_x = nextPos.first - x_pos;
             int dir_y = nextPos.second - y_pos;
 
@@ -61,8 +67,6 @@ public:
             //if(floor(x_pos) == nextPos.first && floor(y_pos) == nextPos.second)
             //  navigation.path.erase(navigation.path.begin());
 
-            if ((x - nextPos.first * PICTURE_RESOLUTION) == 0 && (y == nextPos.second * PICTURE_RESOLUTION) == 0)
-                navigation.path.erase(navigation.path.begin());
         }
         else {
             autoMode = 0;
@@ -160,13 +164,13 @@ public:
     }
     */
 
-    void setInCenter() {
-        characterSprite.setPosition(x_pos * PICTURE_RESOLUTION + PICTURE_RESOLUTION / 2, y * PICTURE_RESOLUTION);
+    //void setInCenter() {
+    //    characterSprite.setPosition(x_pos * PICTURE_RESOLUTION + PICTURE_RESOLUTION / 2, y * PICTURE_RESOLUTION);
 
-    }
+    //}
 
     void placeInAngle() {
-        characterSprite.setPosition(x_pos * PICTURE_RESOLUTION, y_pos * PICTURE_RESOLUTION);
+        characterSprite.setPosition(y_pos * PICTURE_RESOLUTION, x_pos * PICTURE_RESOLUTION);
 
     }
 
@@ -181,6 +185,26 @@ public:
     }
 
     void setDir(int dir_x, int dir_y) {
+        //if (dir_x == 0 && dir_y == 0)
+        //    return;
+
+       /* if (dir_x == 0) {
+            if (dir_y == 1)
+                dir = 3;
+            else {
+                if (dir_y == -1)
+                    dir = 1;
+            }
+        }
+        else {
+            if (dir_x == 1)
+                dir = 0;
+            else {
+                if (dir_x == -1)
+                    dir = 2;
+            }
+        }*/
+
         if (dir_x == 0) {
             if (dir_y == 1)
                 dir = 3;
