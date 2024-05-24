@@ -47,11 +47,11 @@ public:
             //if ((x - nextPos.first * PICTURE_RESOLUTION) == 0 && (y - nextPos.second * PICTURE_RESOLUTION) == 0)
             //    navigation.path.erase(navigation.path.begin());
 
-            if ((x - nextPos.first * PICTURE_RESOLUTION) == 0 && (y - nextPos.second * PICTURE_RESOLUTION) == 0)
+            if ((x - nextPos.second * PICTURE_RESOLUTION) == 0 && (y - nextPos.first * PICTURE_RESOLUTION) == 0)
                 navigation.path.erase(navigation.path.begin());
 
-            int dir_x = nextPos.first - x_pos;
-            int dir_y = nextPos.second - y_pos;
+            int dir_x = nextPos.second - x_pos;
+            int dir_y = nextPos.first - y_pos;
 
             // Set the direction based on the calculated direction
             setDir(dir_x, dir_y);
