@@ -26,38 +26,8 @@ public:
         this->characterSprite.setPosition(x, y);
     }
 
-    void autoove(float& CurrentFrame, float& time, bool& autoMode) {
-        if (!navigation.path.empty()) {
-            auto nextPos = navigation.path.front();
-
-            if ((x - nextPos.second * PICTURE_RESOLUTION) == 0 && (y - nextPos.first * PICTURE_RESOLUTION) == 0) {
-                navigation.path.erase(navigation.path.begin());
-                nextPos = navigation.path.front();
-            }
-                
-
-
-            //int dir_x = nextPos.second - x_pos;
-            //int dir_y = nextPos.first - y_pos;
-
-            int pix_dist_x = nextPos.second * PICTURE_RESOLUTION - x;
-            int pix_dist_y = nextPos.first * PICTURE_RESOLUTION - y;
-
-            setDir(pix_dist_x, pix_dist_y);
-
-            autoChangeSpike(CurrentFrame, time);
-
-            setDirection(time);
-            update(time, autoMode);
-
-        }
-        else {
-            autoMode = 0;
-        }
-    }
-
     void autoMove(float& CurrentFrame, float& time, bool& autoMode) {
-            auto nextPos = navigation.path.front();
+            Pair nextPos = navigation.path.front(); 
 
             if ((x - nextPos.second * PICTURE_RESOLUTION) == 0 && (y - nextPos.first * PICTURE_RESOLUTION) == 0) {
                 navigation.path.erase(navigation.path.begin());

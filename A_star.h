@@ -87,6 +87,9 @@ public:
 
     bool search(int x_pos, int y_pos) {
         src = make_pair(y_pos, x_pos);
+        if (!closedList.empty())
+            closedList.resize(HEIGHT_MAP, vector<bool>(WIDTH_MAP, false));
+
         if (!isValid(src.first, src.second) || !isValid(dest.first, dest.second) ||
             !isUnBlocked(src.first, src.second) || !isUnBlocked(dest.first, dest.second)) {
             return false;
