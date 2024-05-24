@@ -16,7 +16,8 @@ typedef pair<double, pair<int, int>> pPair;
 
 class AStarSearch {
 public:
-    int grid[HEIGHT_MAP][WIDTH_MAP];
+   // int grid[HEIGHT_MAP][WIDTH_MAP];
+    int grid[WIDTH_MAP][HEIGHT_MAP];
     Pair src;
     Pair dest;
     vector<Pair> path;
@@ -67,13 +68,14 @@ public:
 public:
     AStarSearch(vector<string> inputGrid) {
         foundDest = false;
-        closedList.resize(WIDTH_MAP, vector<bool>(HEIGHT_MAP, false));
+        closedList.resize(HEIGHT_MAP, vector<bool>(WIDTH_MAP, false));
+        //closedList.resize(WIDTH_MAP, vector<bool>(HEIGHT_MAP, false));
         for (int i = 0; i < HEIGHT_MAP; i++) {
             for (int j = 0; j < WIDTH_MAP; j++) {
-                if (inputGrid[j][i] == '0' /*|| inputGrid[i][j] == 'd'*/)
-                    grid[i][j] = 1;
-                else
+                if (inputGrid[i][j] == ' ' /*|| inputGrid[i][j] == 'd'*/)
                     grid[i][j] = 0;
+ /*               else
+                    grid[i][j] = 0;*/
                 if (inputGrid[i][j] == 't')
                     dest = make_pair(i, j);
                 cellDetails[i][j].f = numeric_limits<double>::max();
