@@ -77,7 +77,8 @@ public:
                 }
             }
 
-            if (autoMode) {
+
+            if (autoMode && character.navigation.foundDest) {
                 clock.restart();
                 time = time / 1200;
                 character.autoMove(CurrentFrame, time, autoMode);
@@ -246,12 +247,17 @@ public:
                 for (int j = 0; j < WIDTH_MAP; j++)
                 {
                     if (MAP.Grid[i][j] == ' ')
-                        this->s_map.setTextureRect(IntRect(0, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));                    // Ўл€хи 
+                        this->s_map.setTextureRect(IntRect(0 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // Ўл€хи 
                     if (MAP.Grid[i][j] == '0')
-                        this->s_map.setTextureRect(IntRect(PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // —т≥ни
+                        this->s_map.setTextureRect(IntRect(1 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // —т≥ни
+                    if (MAP.Grid[i][j] == 'c')
+                        this->s_map.setTextureRect(IntRect(2 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // «олото
                     if (MAP.Grid[i][j] == 't')
-                        this->s_map.setTextureRect(IntRect(3 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION)); // —карбниц€
-
+                        this->s_map.setTextureRect(IntRect(3 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // —карбниц€
+                    if (MAP.Grid[i][j] == 'k')
+                        this->s_map.setTextureRect(IntRect(4 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // —карбниц€
+                    if (MAP.Grid[i][j] == 'd')
+                        this->s_map.setTextureRect(IntRect(5 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // —карбниц€
 
                     this->s_map.setPosition(j * PICTURE_RESOLUTION, i * PICTURE_RESOLUTION);//по сути раскидывает квадратики, превраща€ в карту. то есть задает каждому из них позицию. если убрать, то вс€ карта нарисуетс€ в одном квадрате 32*32 и мы увидим один квадрат
 

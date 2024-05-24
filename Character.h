@@ -9,6 +9,7 @@ class Character {
 public:
     float x, y, speedMove, speedRun, h, w, dx, dy;
     int x_pos, y_pos, dir, playerScore;
+    bool HasKey;
     String Picture_name;
     Image characterImage;
     Texture characterTexture;
@@ -16,8 +17,9 @@ public:
     Map MAP;
     AStarSearch navigation = AStarSearch(MAP.Grid);
 
-    Character() : x_pos(1), y_pos(1), h(74), w(75), speedMove(0.05), speedRun(1 /*0.1*/), dir(0), dx(1), dy(0), Picture_name("images.png") {
+    Character() : x_pos(1), y_pos(1), h(74), w(75), speedMove(0.05), speedRun(1), dir(0), dx(1), dy(0), Picture_name("images.png") {
         playerScore = 0;
+        HasKey = 0;
         characterImage.loadFromFile("pictures/" + this->Picture_name);
         this->characterTexture.loadFromImage(this->characterImage);
         this->characterSprite.setTexture(this->characterTexture);
