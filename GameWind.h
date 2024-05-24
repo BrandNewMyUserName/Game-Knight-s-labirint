@@ -86,6 +86,7 @@ public:
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
                 autoMode = 1;
+                AStarSearch = navigation
                 character.navigation.search(character.x_pos, character.y_pos);
 
 

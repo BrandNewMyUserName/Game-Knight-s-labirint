@@ -118,8 +118,8 @@ public:
             int y_val[] = { 1, -1, 0, 0 };
 
             for (int dir = 0; dir < 4; ++dir) {
-                int ni = i + x_val[dir];
-                int nj = j + y_val[dir];
+                int ni = i + y_val[dir];
+                int nj = j + x_val[dir];
 
                 if (!isValid(ni, nj) || closedList[ni][nj] || !isUnBlocked(ni, nj))
                     continue;
