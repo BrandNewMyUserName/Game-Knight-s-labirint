@@ -7,21 +7,24 @@
 #include "A_Star.h"
 #include "observed_area.h"
 
-#define PICTURE_RESOLUTION 80
+//#define PICTURE_RESOLUTION 80
 
 using namespace sf;
 using namespace std;
 
 
 class GameWind { // Rename
+private:
+    Character character;
+
 public:
     int width_screen, height_screen;
     String WindowName;
-    Character character;
-    bool autoMode = 0;
 
-    Map MAP = Map();
-
+    bool autoMode = 0, IsTreasureOpened = 0;
+    Map MAP;
+    //Character 
+    View view;
     Image mapImage;
     Texture mapTexture;
     Sprite s_map;
@@ -30,7 +33,7 @@ public:
     RenderWindow currentWind;
 
     GameWind() : width_screen(1920 /*1900*/), height_screen(1080 /*1050*/), WindowName("Knight's Labyrinth: Treasure Hunt"), imageLink("map(80x80).jpg") {
-
+        Character character(MAP);
         currentWind.create(VideoMode(width_screen, height_screen), WindowName);
 
         //Try-Catch
@@ -49,13 +52,17 @@ public:
         this->s_map.setTexture(mapTexture);
     }
 
+    void getplayercoordinateforview(float x, float y) { 
+        view.setCenter(x + 100, y); 
+
+    }
 
     int run() {
         view.reset(FloatRect(character.x, character.y, 800, 450));
         getplayercoordinateforview(character.x, character.y);
 
         Font font;
-        font.loadFromFile("C:\\Users\\User\\Desktop\\University\\2 курс 2 семестр\\Курсова робота\\Картинки\\Шрифт\\static\\OpenSans_Condensed - Bold.ttf");
+        font.loadFromFile("Fonts/troika.otf");
         Text scoreValue(" ", font, 100);
         scoreValue.setStyle(Text::Bold);
         scoreValue.setFillColor(Color::Red);
@@ -78,7 +85,7 @@ public:
             }
 
 
-            if (autoMode && character.navigation.foundDest) {
+            if (autoMode) {
                 clock.restart();
                 time = time / 1200;
                 character.autoMove(CurrentFrame, time, autoMode);
@@ -87,13 +94,7 @@ public:
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
                 autoMode = 1;
-                character.navigation.search(character.x_pos, character.y_pos);
-
-
-                //auto nextPos = character.navigation.path.front();
-                //int dir_x = nextPos.first - character.x_pos;
-                //int dir_y = nextPos.second - character.y_pos;
-                //setDir(dir_x, dir_y);
+                character.layPath();
                 character.placeInAngle();
 
             }

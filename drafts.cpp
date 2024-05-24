@@ -1,4 +1,6 @@
-#pragma once
+// Old MainWind class
+
+/*#pragma once
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -7,7 +9,7 @@ using namespace sf;
 using namespace std;
 
 class Button {
-    public:
+public:
     sf::RectangleShape shape;
     sf::Text text;
 
@@ -50,8 +52,10 @@ public:
     int nextState = -1;
 
 public:
-    MainWindow() :/* mainWind(sf::VideoMode(1900, 1050), "MAIN MENU"),*/ closeButton(400, 100, 200, 50, "Вийти", font), gameButton(500, 200, 200, 50, "Почати гру", font) {
-       
+    MainWindow() :
+    // mainWind(sf::VideoMode(1900, 1050), "MAIN MENU"), 
+    closeButton(400, 100, 200, 50, "Вийти", font), gameButton(500, 200, 200, 50, "Почати гру", font) {
+
         //try {
         //    if (!backgroundTexture.loadFromFile("pictures/MainWind-background.png")) {
         //        int a = -1;
@@ -67,7 +71,7 @@ public:
 
         backgroundSprite.setTexture(backgroundTexture);
 
-        font.loadFromFile("arial.ttf"); // Load font
+        font.loadFromFile("Fonts/troika.otf"); // Load font
 
         closeButton = Button(400, 100, 200, 50, "Вийти", font);
         gameButton = Button(500, 200, 200, 50, "Почати гру", font);
@@ -85,7 +89,7 @@ public:
         while (mainWind.isOpen()) {
 
             Event event;
-            
+
             while (mainWind.pollEvent(event)) {
 
                 if (event.type == sf::Event::Closed) {
@@ -130,4 +134,6 @@ public:
         return nextState; //TODO
     }
 };
+ */
+
 

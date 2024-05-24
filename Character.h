@@ -15,11 +15,12 @@ public:
     Texture characterTexture;
     Sprite characterSprite;
     Map MAP;
-    AStarSearch navigation = AStarSearch(MAP.Grid);
+    vector<Pair> path;
 
     Character() : x_pos(1), y_pos(1), h(74), w(75), speedMove(0.05), speedRun(1), dir(0), dx(1), dy(0), Picture_name("images.png") {
         playerScore = 0;
         HasKey = 0;
+
         characterImage.loadFromFile("pictures/" + this->Picture_name);
         this->characterTexture.loadFromImage(this->characterImage);
         this->characterSprite.setTexture(this->characterTexture);
@@ -28,28 +29,47 @@ public:
         this->characterSprite.setPosition(x, y);
     }
 
+    Character(Map& map) : x_pos(1), y_pos(1), h(74), w(75), speedMove(0.05), speedRun(1), dir(0), dx(1), dy(0), Picture_name("images.png"), MAP(map) {
+        playerScore = 0;
+        HasKey = 0;
+
+        characterImage.loadFromFile("pictures/" + this->Picture_name);
+        this->characterTexture.loadFromImage(this->characterImage);
+        this->characterSprite.setTexture(this->characterTexture);
+        this->characterSprite.setTextureRect(IntRect(8, 15, 180, 112));
+        setMapPos();
+        this->characterSprite.setPosition(x, y);
+    }
+
+    void layPath() {
+        AStarSearch navigation = AStarSearch(MAP.Grid);
+        if (navigation.search(x_pos, y_pos))
+            path = navigation.backPath();
+
+    }
+
     void autoMove(float& CurrentFrame, float& time, bool& autoMode) {
-            Pair nextPos = navigation.path.front(); 
+        Pair nextPos = path.front();
 
-            if ((x - nextPos.second * PICTURE_RESOLUTION) == 0 && (y - nextPos.first * PICTURE_RESOLUTION) == 0) {
-                navigation.path.erase(navigation.path.begin());
-                if (!navigation.path.empty())
-                    nextPos = navigation.path.front();
-                else {
-                    autoMode = 0;
-                    return;
-                }      
+        if ((x - nextPos.second * PICTURE_RESOLUTION) == 0 && (y - nextPos.first * PICTURE_RESOLUTION) == 0) {
+            path.erase(path.begin());
+            if (!path.empty())
+                nextPos = path.front();
+            else {
+                autoMode = 0;
+                return;
             }
+        }
 
-            int pix_dist_x = nextPos.second * PICTURE_RESOLUTION - x;
-            int pix_dist_y = nextPos.first * PICTURE_RESOLUTION - y;
+        int pix_dist_x = nextPos.second * PICTURE_RESOLUTION - x;
+        int pix_dist_y = nextPos.first * PICTURE_RESOLUTION - y;
 
-            setDir(pix_dist_x, pix_dist_y);
+        setDir(pix_dist_x, pix_dist_y);
 
-            autoChangeSpike(CurrentFrame, time);
+        autoChangeSpike(CurrentFrame, time);
 
-            setDirection(time);
-            update(time, autoMode);
+        setDirection(time);
+        update(time, autoMode);
 
     }
 
@@ -101,18 +121,6 @@ public:
     }
 
     void setDir(int dir_x, int dir_y) {
-        //if (dir_x == 0) {
-        //    if (dir_y == 1)
-        //        dir = 3;
-        //    else
-        //        dir = 1;
-        //}
-        //else {
-        //    if (dir_x == 1)
-        //        dir = 0;
-        //    else
-        //        dir = 2;
-        //}
 
         if (dir_x == 0) {
             if (dir_y > 0)
@@ -126,10 +134,6 @@ public:
             if (dir_x < 0)
                 dir = 2;
         }
-    }
-
-    void setAutoDir(Pair nextPos) {
-
     }
 
     void setDirection(float time) {
@@ -164,7 +168,7 @@ public:
     void interactionWithMap() {
         for (int i = y / PICTURE_RESOLUTION; i < (y + h) / PICTURE_RESOLUTION; i++)
             for (int j = x / PICTURE_RESOLUTION; j < (x + w) / PICTURE_RESOLUTION; j++) {
-                if (MAP.Grid[i][j] == '0' || MAP.Grid[i][j] == 'd') {
+                if (MAP.Grid[i][j] == '0') {
                     switch (dir) {
                     case 0: x = j * PICTURE_RESOLUTION - w; break;
                     case 1: y = i * PICTURE_RESOLUTION + PICTURE_RESOLUTION; break;
@@ -172,6 +176,33 @@ public:
                     case 3: y = i * PICTURE_RESOLUTION - h; break;
                     }
                 }
+
+                if (MAP.Grid[i][j] == 'd') {
+                    if (!HasKey) {
+                        switch (dir) {
+                        case 0: x = j * PICTURE_RESOLUTION - w; break;
+                        case 1: y = i * PICTURE_RESOLUTION + PICTURE_RESOLUTION; break;
+                        case 2: x = j * PICTURE_RESOLUTION + PICTURE_RESOLUTION; break;
+                        case 3: y = i * PICTURE_RESOLUTION - h; break;
+                        }
+                    }
+                }
+
+                if (MAP.Grid[i][j] == 'k') {
+                    HasKey = 1;
+                    MAP.Grid[i][j] = ' ';
+                }
+
+                if (MAP.Grid[i][j] == 'c') {
+                    ++playerScore;
+                    MAP.Grid[i][j] = ' ';
+                }
+
+                if (MAP.Grid[i][j] == 't' && HasKey) {
+
+                }
+
+
             }
     }
 
