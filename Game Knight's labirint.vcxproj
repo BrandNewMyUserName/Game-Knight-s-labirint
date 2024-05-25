@@ -134,6 +134,7 @@
     <ClCompile Include="GameSettings.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="SettingsWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +157,7 @@
     <ClInclude Include="GameWind.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="ResultWind.h" />
     <ClInclude Include="SettingsWindow.h" />
   </ItemGroup>

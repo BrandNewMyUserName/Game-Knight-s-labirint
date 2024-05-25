@@ -1,7 +1,7 @@
 #pragma once
 #include "A_star.h"
 #include "Map.h"
-#include "observed_area.h"
+
 #include <cmath>
 #include <algorithm>
 
@@ -17,11 +17,16 @@ public:
     Map MAP;
     vector<Pair> path;
 
-    Character() : x_pos(1), y_pos(1), h(74), w(75), speedMove(0.05), speedRun(1), dir(0), dx(1), dy(0), Picture_name("images.png") {
+    Character() : 
+        x_pos(1), y_pos(1), h(74), w(75), speedMove(0.05), speedRun(1), dir(0), dx(1), dy(0), Picture_name("mages.png") {
         playerScore = 0;
         HasKey = 0;
 
-        characterImage.loadFromFile("pictures/" + this->Picture_name);
+
+        if (!characterImage.loadFromFile("pictures/" + Picture_name)) {
+            std::cerr << "Error";
+        }
+
         this->characterTexture.loadFromImage(this->characterImage);
         this->characterSprite.setTexture(this->characterTexture);
         this->characterSprite.setTextureRect(IntRect(8, 15, 180, 112));
@@ -41,8 +46,10 @@ public:
         this->characterSprite.setPosition(x, y);
     }
 
+
+
     void layPath() {
-        AStarSearch navigation = AStarSearch(MAP.Grid);
+        AStarSearch navigation(MAP.Grid);
         if (navigation.search(x_pos, y_pos))
             path = navigation.backPath();
 

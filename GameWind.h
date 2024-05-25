@@ -5,7 +5,6 @@
 #include "Character.h"
 #include "Map.h"
 #include "A_Star.h"
-#include "observed_area.h"
 
 //#define PICTURE_RESOLUTION 80
 
@@ -57,6 +56,36 @@ public:
 
     }
 
+    void drawMap() {
+
+       // s_map.setTextureRect(IntRect(0, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));
+        //s_map.setPosition(0 * PICTURE_RESOLUTION, 0 * PICTURE_RESOLUTION);
+
+        currentWind.draw(this->s_map);
+
+        for (int i = 0; i < HEIGHT_MAP; i++) {
+            for (int j = 0; j < WIDTH_MAP; j++)
+            {
+                if (MAP.Grid[i][j] == ' ')
+                    this->s_map.setTextureRect(IntRect(0 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // Шляхи 
+                if (MAP.Grid[i][j] == '0')
+                    this->s_map.setTextureRect(IntRect(1 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // Стіни
+                if (MAP.Grid[i][j] == 'c')
+                    this->s_map.setTextureRect(IntRect(2 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // Золото
+                if (MAP.Grid[i][j] == 't')
+                    this->s_map.setTextureRect(IntRect(3 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // Скарбниця
+                if (MAP.Grid[i][j] == 'k')
+                    this->s_map.setTextureRect(IntRect(4 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // Ключ
+                if (MAP.Grid[i][j] == 'd')
+                    this->s_map.setTextureRect(IntRect(5 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // Двері
+
+                // Розміщення поля згідно позиції
+                s_map.setPosition(j * PICTURE_RESOLUTION, i * PICTURE_RESOLUTION);
+                currentWind.draw(s_map);
+            }
+        }
+    }
+
     int run() {
         view.reset(FloatRect(character.x, character.y, 800, 450));
         getplayercoordinateforview(character.x, character.y);
@@ -64,8 +93,8 @@ public:
         Font font;
         font.loadFromFile("Fonts/troika.otf");
         Text scoreValue(" ", font, 100);
-        scoreValue.setStyle(Text::Bold);
-        scoreValue.setFillColor(Color::Red);
+        scoreValue.setStyle(Text::Italic);
+        scoreValue.setFillColor(Color::Color(59, 62, 39));
 
         float CurrentFrame = 0;
         Clock clock;
@@ -84,7 +113,6 @@ public:
                 }
             }
 
-
             if (autoMode) {
                 clock.restart();
                 time = time / 1200;
@@ -99,9 +127,6 @@ public:
 
             }
 
-
-
-
             if (!autoMode) {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
                     character.toMove(CurrentFrame, time, autoMode);
@@ -109,169 +134,27 @@ public:
                 }
             }
 
-
-
-
-
-            // ЕМУЛЯЦІЯ РУХУ ЛИЦАРЯ ПІД ЧАС НАТИСКАННЯ КЛАВІШ
-/*
-            int x_coord[] = { 67, 250, 435 };
-            if ((Keyboard::isKeyPressed(Keyboard::D))) {
-                    CurrentFrame += 0.005 * time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив 0.005 можно изменить скорость анимации
-                    if (CurrentFrame > 3)
-                        CurrentFrame -= 3;
-                    character.characterSprite.setTextureRect(IntRect(x_coord[int(CurrentFrame)], 15, 180, 112));
-                    character.characterSprite.move(0.1 * time, 0);
-            }
-
-            if ((Keyboard::isKeyPressed(Keyboard::D))) {
-
-                CurrentFrame += 100 * time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив 0.005 можно изменить скорость анимации
-                if (i > 2)
-                    i = 0; //если пришли к третьему кадру - откидываемся назад.
-                character.characterSprite.setTextureRect(IntRect(x_coord[i], 25, 75, 74));
-                character.characterSprite.move(0.1 * time, 0);
-                ++i;
-                character.dx = 2;
-                character.dx = 0;
-
-            }
-
-            if ((Keyboard::isKeyPressed(Keyboard::D))) {
-
-                CurrentFrame += 100 * time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив 0.005 можно изменить скорость анимации
-                if (i > 2)
-                    i = 0; //если пришли к третьему кадру - откидываемся назад.
-                character.characterSprite.setTextureRect(IntRect(x_coord[i], 25, 75, 74));
-                character.characterSprite.move(0.1 * time, 0);
-                ++i;
-                character.dx = 2;
-                character.dx = 0;
-
-            }
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-                int xTexture = 0;
-                xTexture = (int)character.characterSprite.getPosition().y % 3;
-                switch (xTexture) {
-                case 0:
-                    character.characterSprite.setTextureRect(IntRect(600, 25, 75, 74));
-
-                    break;
-
-                case 1:
-                    character.characterSprite.setTextureRect(IntRect(600, 210, 75, 74));
-                    break;
-
-                case 2:
-                    character.characterSprite.setTextureRect(IntRect(600, 400, 75, 74));
-                    break;
-                }
-
-                character.characterSprite.move(0, -0.1 * time);
-                //position.y -= 0.1f * time;
-
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-                int xTexture = 0;
-                xTexture = (int)character.characterSprite.getPosition().y % 3;
-                switch (xTexture) {
-                case 0:
-                    character.characterSprite.setTextureRect(IntRect(66, 210, 75, 74));
-                    break;
-
-                case 1:
-                    character.characterSprite.setTextureRect(IntRect(250, 210, 75, 74));
-                    break;
-
-                case 2:
-                    character.characterSprite.setTextureRect(IntRect(435, 210, 75, 74));
-                    break;
-                }
-                character.characterSprite.move(0, 0.1 * time);
-                //position.y += 0.1f*time;
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-                int xTexture = 0;
-                xTexture = (int)character.characterSprite.getPosition().x % 3;
-                switch (xTexture) {
-                case 0:
-                    character.characterSprite.setTextureRect(IntRect(67, 400, 75, 74));
-                    break;
-
-                case 1:
-                    character.characterSprite.setTextureRect(IntRect(250, 400, 75, 74));
-                    break;
-
-                case 2:
-                    character.characterSprite.setTextureRect(IntRect(435, 400, 75, 74));
-                    break;
-                }
-                character.characterSprite.move(-0.1 * time, 0);
-                // position.x -= 0.1f*time;
-            }
-            //if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-                int xTexture = 0;
-                xTexture = (int)character.characterSprite.getPosition().x % 3;
-                switch (xTexture) {
-                case 0:
-                    character.characterSprite.setTextureRect(IntRect(67, 25, 75, 74));
-                    break;
-
-                case 1:
-                    character.characterSprite.setTextureRect(IntRect(250, 25, 75, 74));
-                    break;
-
-                case 2:
-                    character.characterSprite.setTextureRect(IntRect(435, 25, 75, 74));
-                    break;
-                }
-
-                character.characterSprite.move(0.1 * time, 0);
-                // position.x += 0.1f* time;
-            }
-*/
-
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 currentWind.close();
-                //nextState = 1;
             }
-            //character.update(time);
-            currentWind.setView(view);//"оживляем" камеру в окне sfml
+
+            currentWind.setView(view);
             currentWind.clear(Color(59, 62, 39));
 
-            this->s_map.setTextureRect(IntRect(0, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));
-            this->s_map.setPosition(0 * PICTURE_RESOLUTION, 0 * PICTURE_RESOLUTION);//по сути раскидывает квадратики, превращая в карту. то есть задает каждому из них позицию. если убрать, то вся карта нарисуется в одном квадрате 32*32 и мы увидим один квадрат
-            currentWind.draw(this->s_map);
 
-            for (int i = 0; i < HEIGHT_MAP; i++) {
-                for (int j = 0; j < WIDTH_MAP; j++)
-                {
-                    if (MAP.Grid[i][j] == ' ')
-                        this->s_map.setTextureRect(IntRect(0 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // Шляхи 
-                    if (MAP.Grid[i][j] == '0')
-                        this->s_map.setTextureRect(IntRect(1 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // Стіни
-                    if (MAP.Grid[i][j] == 'c')
-                        this->s_map.setTextureRect(IntRect(2 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // Золото
-                    if (MAP.Grid[i][j] == 't')
-                        this->s_map.setTextureRect(IntRect(3 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // Скарбниця
-                    if (MAP.Grid[i][j] == 'k')
-                        this->s_map.setTextureRect(IntRect(4 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // Скарбниця
-                    if (MAP.Grid[i][j] == 'd')
-                        this->s_map.setTextureRect(IntRect(5 * PICTURE_RESOLUTION, 0, PICTURE_RESOLUTION, PICTURE_RESOLUTION));   // Скарбниця
 
-                    this->s_map.setPosition(j * PICTURE_RESOLUTION, i * PICTURE_RESOLUTION);//по сути раскидывает квадратики, превращая в карту. то есть задает каждому из них позицию. если убрать, то вся карта нарисуется в одном квадрате 32*32 и мы увидим один квадрат
+            drawMap();
 
-                    currentWind.draw(this->s_map);//рисуем квадратики на экран
-                }
-            }
+            
 
             std::ostringstream playerScoreString;
             std::ostringstream Pos_X_str, Pos_Y_str;
             Pos_X_str << character.x_pos;
             Pos_Y_str << character.y_pos;
-            scoreValue.setString("Pos_x: " + Pos_X_str.str());
-            scoreValue.setPosition(view.getCenter().x, view.getCenter().y);
+            scoreValue.setString("Pos_x: " + Pos_X_str.str() + "Pos_y: " + Pos_Y_str.str());
+            scoreValue.setPosition(view.getCenter().x + 250, view.getCenter().y - 200);
+            scoreValue.setCharacterSize(12);
+            
             currentWind.draw(scoreValue);
             currentWind.draw(character.characterSprite);
             currentWind.display();

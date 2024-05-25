@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-class MainWindow
+class Menu
 {
 	float menu_X;                                     //                    X
 	float menu_Y;				                      //                    Y
@@ -22,7 +22,7 @@ class MainWindow
 	sf::RenderWindow& mywindow;                       //                           
 public:
 
-	MainWindow(sf::RenderWindow& window, float menux, float menuy, int sizeFont, int step, std::vector<sf::String>& name, sf::String nameTitle);
+	Menu(sf::RenderWindow& window, float menux, float menuy, int sizeFont, int step, std::vector<sf::String>& name, sf::String nameTitle);
 
 	void draw();                                     //            
 

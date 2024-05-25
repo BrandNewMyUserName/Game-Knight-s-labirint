@@ -1,24 +1,29 @@
 #pragma once
-#include"Map.h"
-class GameSettings
-{
-protected:
-	static bool autoMode;
-	static int sizeMap;
-	static int algorithm;
-	static Map GameMap;
+#include "Map.h"
+
+class GameSettings {
+private:
+    GameSettings();
+    int pictureResolution = 80;
+    bool autoMode;
+    int algorithm;
+    Map GameMap;
 
 
-	GameSettings() {
-		setAutoMode(0);
-		setAlgorithm(1);
-		setSizeMap(2);
-	}
+public:
+    static GameSettings& getInstance();
 
-	void setAutoMode(bool setMode);
-	void setAlgorithm(int algoNum);
-	void setSizeMap(int mapNum);
-	bool IsAutoMode();
+    void setMode(bool setMode);
+    bool getMode() const;
 
+    void setAlgorithm(int algoNum);
+    int getAlgorithm() const;
+
+    void setSizeMap(int mapNum);
+    int getSizeMap() const;
+
+    Map getGameMap();
+
+    GameSettings(const GameSettings&) = delete;
+    GameSettings& operator=(const GameSettings&) = delete;
 };
-

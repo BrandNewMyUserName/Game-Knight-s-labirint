@@ -1,11 +1,11 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "MainWindow.h"
+#include "Menu.h"
 #include <iostream>
 #include <string>
 
 
-MainWindow::MainWindow(sf::RenderWindow& window, float menux, float menuy, int sizeFont, int step, std::vector<sf::String>& name, sf::String nameTitle)
+Menu::Menu(sf::RenderWindow& window, float menux, float menuy, int sizeFont, int step, std::vector<sf::String>& name, sf::String nameTitle)
     : menu_X(menux), menu_Y(menuy), menu_Step(step), max_menu(static_cast<int>(name.size())), size_font(sizeFont), mainMenu(name.size()), mywindow(window)
 {
     font.loadFromFile("Fonts/troika.otf");
@@ -22,7 +22,7 @@ MainWindow::MainWindow(sf::RenderWindow& window, float menux, float menuy, int s
 }
 
 
-void MainWindow::setInitText(sf::Text& text, const sf::String& str, float xpos, float ypos) const
+void Menu::setInitText(sf::Text& text, const sf::String& str, float xpos, float ypos) const
 {
     text.setFont(font);
     text.setFillColor(menu_text_color);
@@ -33,7 +33,7 @@ void MainWindow::setInitText(sf::Text& text, const sf::String& str, float xpos, 
     text.setOutlineColor(border_color);
 }
 
-void MainWindow::AlignMenu(int posx)
+void Menu::AlignMenu(int posx)
 {
     float nullx = 0;
     for (int i = 0; i < max_menu; i++) {
@@ -54,7 +54,7 @@ void MainWindow::AlignMenu(int posx)
     }
 }
 
-void MainWindow::MoveUp()
+void Menu::MoveUp()
 {
     mainMenuSelected--;
     if (mainMenuSelected >= 0) {
@@ -68,7 +68,7 @@ void MainWindow::MoveUp()
     }
 }
 
-void MainWindow::MoveDown()
+void Menu::MoveDown()
 {
     mainMenuSelected++;
     if (mainMenuSelected < max_menu) {
@@ -82,12 +82,12 @@ void MainWindow::MoveDown()
     }
 }
 
-void MainWindow::draw()
+void Menu::draw()
 {
     for (int i = 0; i < max_menu; i++) mywindow.draw(mainMenu[i]);
 }
 
-void MainWindow::setColorTextMenu(sf::Color menColor, sf::Color ChoColor, sf::Color BordColor)
+void Menu::setColorTextMenu(sf::Color menColor, sf::Color ChoColor, sf::Color BordColor)
 {
     menu_text_color = menColor;
     chose_text_color = ChoColor;
@@ -99,7 +99,7 @@ void MainWindow::setColorTextMenu(sf::Color menColor, sf::Color ChoColor, sf::Co
     mainMenu[mainMenuSelected].setFillColor(chose_text_color);
 }
 
-void MainWindow::handleMouseClick(float mouseX, float mouseY)
+void Menu::handleMouseClick(float mouseX, float mouseY)
 {
     for (int i = 0; i < max_menu; i++) {
         sf::FloatRect bounds = mainMenu[i].getGlobalBounds();
@@ -112,7 +112,7 @@ void MainWindow::handleMouseClick(float mouseX, float mouseY)
     }
 }
 
-int MainWindow::getSelectedIndex()    //                                    
+int Menu::getSelectedIndex()    //                                    
 {
     return mainMenuSelected;
 }

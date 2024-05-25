@@ -59,13 +59,19 @@ public:
             col = temp_col;
         }
 
+
+        //ћожна зм≥нити координати м≥сц€ми
         path.push_back(make_pair(row, col));
         reverse(path.begin(), path.end());
         path.erase(path.begin());
     }
 
 public:
-    AStarSearch(vector<string> & inputGrid) {
+    AStarSearch() {}
+
+
+
+    AStarSearch(vector<string> inputGrid) {
         foundDest = false;
         closedList.resize(HEIGHT_MAP, vector<bool>(WIDTH_MAP, false));
         for (int i = 0; i < HEIGHT_MAP; i++) {
