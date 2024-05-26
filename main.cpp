@@ -1,135 +1,89 @@
-//#include <SFML/Graphics.hpp>
-//#include "MainWind.h" // Подключаем заголовочный файл
-//
-//int main() {
-//    // Создаем объект класса MainWindow
-//    MainWindow mainWindow;
-//
-//    // Вызываем метод, который открывает окно
-//    mainWindow.open();
-//
-//    return EXIT_SUCCESS;
-//}
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include "SettingsWindow.h"
+#include "GameSettings.h"
+#include "MainWindow.h"
+#include "GameWind.h"
+#include <vector>
+#include <windows.h>
 
+using namespace std;
+using namespace sf;
 
-//#include <SFML/Graphics.hpp>
-//#include "GameWind.h" // Include GameWind.h contents
-//#include "MainWind.h"
-//#include<iostream>
-//
-//int main() {
-//
-//    while (CreateMainWind()) {
-//
-//        if (CreateMainWind()) {
-//            Start_Game();
-//
-//        }
-//
-//    }
-//
-//    return 0;
-//}
-
-
-#include "MainWind.h"
-#include "GameWind.h" 
 
 int main() {
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
 
-    MainWindow CurrentSeans;
+    GameSettings &Settings = GameSettings::getInstance();
 
-    while (CurrentSeans.CreateMainWindow() == 1) {
-        // Open Game Window
-        OpenGameWindow();
+    sf::RenderWindow window(sf::VideoMode(1920, 1080), L"Головне Меню");
+    std::vector<sf::String> menuItems = { L"Почати гру", L"Налаштування", L"Вийти" };
+    sf::String Title = L"Лабіринт лицаря: Пошук скарбів";
+
+    MainWindow mainWind(window, 1100.0f, 200.0f, 60, 100, menuItems, Title);
+    mainWind.AlignMenu(3);
+
+
+
+    sf::Texture backgroundTexture;
+    if (!backgroundTexture.loadFromFile("pictures/MainWind-background.png")) {
+        std::cerr << "Error loading background texture\n";
+        return -1;
     }
-    // End the program if result is not 1
+
+
+    sf::Sprite backgroundSprite;
+    backgroundSprite.setTexture(backgroundTexture);
+    sf::Vector2u windowSize = window.getSize();
+    sf::Vector2u textureSize = backgroundTexture.getSize();
+    backgroundSprite.setScale(
+        float(windowSize.x) / textureSize.x,
+        float(windowSize.y) / textureSize.y
+    );
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Up) {
+                    mainWind.MoveUp();
+                }
+                if (event.key.code == sf::Keyboard::Down) {
+                    mainWind.MoveDown();
+                }
+            }
+
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    mainWind.handleMouseClick(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y));
+                    int selected = mainWind.getSelectedIndex();
+                    if (selected == 0) {
+                        window.close();
+                        GameWind game;
+                        game.run();
+                    }
+                    if (selected == 1) {
+                        //std::vector<sf::String> settingsItems = { L"Режим гри", L"Мапа", L"Алгоритм" };
+                        //SettingsWindow settings(window, 100.0f, 200.0f, 48, 100, settingsItems);
+                        //settings.run();
+                    }
+                    if (selected == 2) {
+                        window.close();
+                    }
+                }
+            }
+        }
+
+        window.clear();
+        window.draw(backgroundSprite);
+        mainWind.draw();
+        window.display();
+    }
+
     return 0;
 }
-
-
-
-//#include <SFML/Graphics.hpp>
-//
-////#define OPEN_GAMEWIND 1
-////#define EXIT_PROGRAM 0
-//
-//// Функция для создания кнопки
-//sf::RectangleShape createButton(float x, float y, float width, float height, sf::Color color) {
-//    sf::RectangleShape button(sf::Vector2f(width, height));
-//    button.setPosition(x, y);
-//    button.setFillColor(color);
-//    return button;
-//}
-//
-//int main() {
-//    // Создание окна для главной страницы
-//    sf::RenderWindow mainWindow(sf::VideoMode(800, 600), "SFML Page Movement");// , sf::Style::Fullscreen);
-//
-//    // Загрузка фона
-//    sf::Texture backgroundTexture;
-//    if (!backgroundTexture.loadFromFile("pictures/MainWind-background.jpg")) {
-//        return EXIT_FAILURE;
-//    }
-//    sf::Sprite backgroundSprite(backgroundTexture);
-//
-//    // Создание кнопок
-//    sf::RectangleShape closeButton = createButton(100, 100, 200, 50, sf::Color::Red);
-//    sf::RectangleShape gameButton = createButton(100, 200, 200, 50, sf::Color::Green);
-//
-//    // Создание текста для кнопок
-//    sf::Font font;
-//    font.loadFromFile("arial.ttf"); // Путь к шрифту
-//
-//    sf::Text closeText("Close", font, 30);
-//    closeText.setPosition(165, 110);
-//    closeText.setFillColor(sf::Color::White);
-//
-//    sf::Text gameText("Game Window", font, 30);
-//    gameText.setPosition(105, 210);
-//    gameText.setFillColor(sf::Color::White);
-//
-//    while (mainWindow.isOpen()) {
-//        sf::Event event;
-//        while (mainWindow.pollEvent(event)) {
-//            if (event.type == sf::Event::Closed) {
-//                mainWindow.close();
-//            }
-//            // Обработка нажатия кнопок
-//            if (event.type == sf::Event::MouseButtonPressed) {
-//                sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow);
-//                if (closeButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-//                    mainWindow.close(); // Закрываем окно при нажатии на кнопку "Close"
-//                    //return EXIT_FAILURE;
-//                }
-//
-//                if (gameButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-//                    // Открываем новое окно при нажатии на кнопку "Game Window"
-//                    sf::RenderWindow gameWindow(sf::VideoMode(800, 600), "Game Window");
-//                    while (gameWindow.isOpen()) {
-//                        sf::Event gameEvent;
-//                        while (gameWindow.pollEvent(gameEvent)) {
-//                            if (gameEvent.type == sf::Event::Closed) {
-//                                gameWindow.close();
-//                                //return OPEN_GAMEWIND;
-//                            }
-//                        }
-//                        gameWindow.clear();
-//                        gameWindow.display();
-//                    }
-//                }
-//            }
-//        }
-//
-//        mainWindow.clear();
-//        mainWindow.draw(backgroundSprite); // Отображаем фон
-//        mainWindow.draw(closeButton);
-//        mainWindow.draw(gameButton);
-//        mainWindow.draw(closeText);
-//        mainWindow.draw(gameText);
-//        mainWindow.display();
-//    }
-//    return EXIT_SUCCESS;
-//}
-
-

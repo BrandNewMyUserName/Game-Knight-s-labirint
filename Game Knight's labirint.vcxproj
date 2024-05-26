@@ -131,7 +131,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameSettings.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="SettingsWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="openal32.dll" />
@@ -148,9 +152,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="A_star.h" />
+    <ClInclude Include="Character.h" />
+    <ClInclude Include="GameSettings.h" />
     <ClInclude Include="GameWind.h" />
-    <ClInclude Include="MainWind.h" />
+    <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="ResultWind.h" />
+    <ClInclude Include="SettingsWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="drafts.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
